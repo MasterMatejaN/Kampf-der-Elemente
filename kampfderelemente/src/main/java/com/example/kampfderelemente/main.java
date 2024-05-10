@@ -1,12 +1,15 @@
 package com.example.kampfderelemente;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -28,8 +31,12 @@ public class main extends Application {
     private Button[] abilities1 = new Button[4];
     private Button[] abilities2 = new Button[4];
     int groundY = (height / 6) * 5;
-    private CharacterPlayable PlayerOne = new CharacterPlayable(100, 50, 100, (int) (width / 10), groundY);
-    private CharacterPlayable PlayerTwo = new CharacterPlayable(100, 50, 100, (int) (width / 10), groundY);
+    private CharacterPlayable PlayerOne = new CharacterPlayable(
+            new Image(""), 100, 50, 100, (int) (width / 10), groundY
+    );
+    private CharacterPlayable PlayerTwo = new CharacterPlayable(
+            new Image(""), 100, 50, 100, (int) (width / 10), groundY
+    );
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -42,7 +49,34 @@ public class main extends Application {
         ground.setY(groundY);
         ground.setFitWidth(width);
         ground.setFitHeight(height / 6);
-
+        fight.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                System.out.println(event.getCode());
+                switch (event.getCode()){
+                    case A:
+                        PlayerOne.setX(PlayerOne.getX() - 1);
+                        break;
+                    case W:
+                        break;
+                    case S:
+                        break;
+                    case D:
+                        PlayerOne.setX(PlayerOne.getX() + 1);
+                        break;
+                    case UP:
+                        break;
+                    case DOWN:
+                        break;
+                    case LEFT:
+                        PlayerOne.setX(PlayerOne.getX() - 1);
+                        break;
+                    case RIGHT:
+                        PlayerOne.setX(PlayerOne.getX() + 1);
+                        break;
+                }
+            }
+        });
         everything.getChildren().addAll(ground, PlayerOne, PlayerTwo);
         stage.setScene(fight);
         stage.show();

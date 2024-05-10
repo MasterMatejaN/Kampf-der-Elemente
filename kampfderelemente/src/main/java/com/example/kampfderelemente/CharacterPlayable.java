@@ -9,7 +9,6 @@ public class CharacterPlayable extends ImageView {
     int height;
     int x;
     int y;
-
     public CharacterPlayable(int health, int width, int height, int x, int y) {
         this.health = health;
         this.width = width;
