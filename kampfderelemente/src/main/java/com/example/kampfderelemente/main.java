@@ -32,10 +32,10 @@ public class main extends Application {
     private Button[] abilities2 = new Button[4];
     int groundY = (height / 6) * 5;
     private CharacterPlayable PlayerOne = new CharacterPlayable(
-            new Image(""), 100, 50, 100, (int) (width / 10), groundY
+            100, 50, 100, (int) (width / 10), groundY
     );
     private CharacterPlayable PlayerTwo = new CharacterPlayable(
-            new Image(""), 100, 50, 100, (int) (width / 10), groundY
+            100, 50, 100, (int) (width / 10), groundY
     );
 
     @Override
@@ -53,26 +53,26 @@ public class main extends Application {
             @Override
             public void handle(KeyEvent event) {
                 System.out.println(event.getCode());
-                switch (event.getCode()){
+                switch (event.getCode()) {
                     case A:
-                        PlayerOne.setX(PlayerOne.getX() - 1);
+                        PlayerOne.setLayoutX(PlayerOne.getLayoutX() - 1);
                         break;
                     case W:
                         break;
                     case S:
                         break;
                     case D:
-                        PlayerOne.setX(PlayerOne.getX() + 1);
+                        PlayerOne.setLayoutX(PlayerOne.getLayoutX() + 1);
                         break;
                     case UP:
                         break;
                     case DOWN:
                         break;
                     case LEFT:
-                        PlayerOne.setX(PlayerOne.getX() - 1);
+                        PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - 1);
                         break;
                     case RIGHT:
-                        PlayerOne.setX(PlayerOne.getX() + 1);
+                        PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + 1);
                         break;
                 }
             }
