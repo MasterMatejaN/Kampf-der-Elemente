@@ -31,11 +31,17 @@ public class main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("Kampf der Elemente");
-        ImageView ebene = new ImageView();
-        ebene.setX(0);
-        ebene.setY((height / 6) * 5);
-        ebene.setFitWidth(width);
-        ebene.setFitHeight(height / 6);
+
+        int groundY = (height / 6) * 5;
+        ImageView ground = new ImageView();
+        ground.setX(0);
+        ground.setY(groundY);
+        ground.setFitWidth(width);
+        ground.setFitHeight(height / 6);
+
+        CharacterPlayable PlayerOne =
+                new CharacterPlayable(100, 50 , 100, (int) (width / 10), groundY);
+        everything.getChildren().addAll(PlayerOne, ground);
         stage.setScene(fight);
         stage.show();
     }
