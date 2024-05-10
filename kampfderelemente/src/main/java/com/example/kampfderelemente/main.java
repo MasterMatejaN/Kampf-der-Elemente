@@ -27,27 +27,34 @@ public class main extends Application {
 
     private Button[] abilities1 = new Button[4];
     private Button[] abilities2 = new Button[4];
+    int groundY = (height / 6) * 5;
+    private CharacterPlayable PlayerOne = new CharacterPlayable(100, 50, 100, (int) (width / 10), groundY);
+    private CharacterPlayable PlayerTwo = new CharacterPlayable(100, 50, 100, (int) (width / 10), groundY);
 
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("Kampf der Elemente");
 
-        int groundY = (height / 6) * 5;
+        updateCharacterHealth();
+
         ImageView ground = new ImageView();
         ground.setX(0);
         ground.setY(groundY);
         ground.setFitWidth(width);
         ground.setFitHeight(height / 6);
 
-        CharacterPlayable PlayerOne =
-                new CharacterPlayable(100, 50 , 100, (int) (width / 10), groundY);
-        everything.getChildren().addAll(PlayerOne, ground);
+        everything.getChildren().addAll(ground, PlayerOne, PlayerTwo);
         stage.setScene(fight);
         stage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void updateCharacterHealth() {
+        HpPlayer1.setProgress(PlayerOne.health);
+        HpPlayer1.setProgress(PlayerTwo.health);
     }
 
     public void showabilities() {
