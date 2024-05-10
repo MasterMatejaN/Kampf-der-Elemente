@@ -14,7 +14,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
 public class main extends Application {
 
     /*Overall*/
@@ -32,10 +31,10 @@ public class main extends Application {
     private Button[] abilities2 = new Button[4];
     int groundY = (height / 6) * 5;
     private CharacterPlayable PlayerOne = new CharacterPlayable(
-            new Image(""), 100, 50, 100, (int) (width / 10), groundY
+             100, 50, 100, (int) (width / 10), groundY
     );
     private CharacterPlayable PlayerTwo = new CharacterPlayable(
-            new Image(""), 100, 50, 100, (int) (width / 10), groundY
+            100, 50, 100, (int) (width / 10), groundY
     );
 
     @Override
