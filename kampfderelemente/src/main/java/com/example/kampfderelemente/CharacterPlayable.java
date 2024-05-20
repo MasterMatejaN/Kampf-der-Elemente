@@ -10,12 +10,17 @@ public class CharacterPlayable extends Button {
     int height;
     int x;
     int y;
-    public CharacterPlayable(int health, int width, int height, int x, int y) {
+    int damage;
+
+    boolean direction;
+    public CharacterPlayable(int health, int width, int height, int x, int y, int damage, boolean direction) {
         this.health = health;
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
+        this.damage = damage;
+        this.direction = direction;
         this.setLayoutX(x);
         this.setLayoutY(y);
         this.setWidth(width);

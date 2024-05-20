@@ -36,10 +36,10 @@ public class main extends Application {
     private Button[] abilities2 = new Button[4];
     int groundY = (height / 6) * 5;
     private CharacterPlayable PlayerOne = new CharacterPlayable(
-            100, 50, 100, (int) (width / 10), groundY
+            100, 50, 100, (int) (width / 10), groundY, 5, false
     );
     private CharacterPlayable PlayerTwo = new CharacterPlayable(
-            100, 50, 100, (int) (width / 10), groundY
+            100, 50, 100, (int) (width / 10), groundY, 5, true
     );
 
     @Override
@@ -55,13 +55,13 @@ public class main extends Application {
         ground.setFitHeight(height / 6);
 
         Set<KeyCode> isPressed = new HashSet<>();
-        fight.setOnKeyReleased(e-> {
-                isPressed.remove(e.getCode());
-                System.out.println(isPressed);
+        fight.setOnKeyReleased(e -> {
+            isPressed.remove(e.getCode());
+            System.out.println(isPressed);
         });
 
         //Thread, Timeline, Platform.runlater //Animationtimer
-        Thread t = new Thread(()-> {
+        Thread t = new Thread(() -> {
             while (true) {
                 try {
                     Thread.sleep(50);
@@ -75,9 +75,9 @@ public class main extends Application {
         });
         t.start();
 
-        fight.setOnKeyPressed(e-> {
-                isPressed.add(e.getCode());
-                System.out.println(isPressed);
+        fight.setOnKeyPressed(e -> {
+            isPressed.add(e.getCode());
+            System.out.println(isPressed);
 
         });
 
@@ -105,10 +105,11 @@ public class main extends Application {
     }
 
     private void handleIsPressed(Set<KeyCode> isPressed) {
-        for (KeyCode k: isPressed) {
+        for (KeyCode k : isPressed) {
             switch (k) {
                 case A:
                     PlayerOne.setLayoutX(PlayerOne.getLayoutX() - 1);
+                    PlayerOne.direction = true;
                     break;
                 case W:
                     break;
@@ -116,6 +117,7 @@ public class main extends Application {
                     break;
                 case D:
                     PlayerOne.setLayoutX(PlayerOne.getLayoutX() + 1);
+                    PlayerOne.direction = false;
                     break;
                 case I:
                     break;
@@ -123,9 +125,26 @@ public class main extends Application {
                     break;
                 case J:
                     PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - 1);
+                    PlayerTwo.direction = true;
                     break;
                 case L:
                     PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + 1);
+                    PlayerTwo.direction = false;
+                    break;//todo (delete me Mateja) du kannst die Buchstaben gerne anpassen
+                case Y: // todo: (only Akinci delete me) | notiz: direction "false" => rechts | "true" == links
+                    // todo: 80 ist range, soll ich das dann als attributspeichern?
+                    if ((PlayerOne.direction && (PlayerOne.x - 80 > PlayerTwo.x && PlayerTwo.x < PlayerOne.x))
+                            || (!PlayerOne.direction && (PlayerOne.x + 80 < PlayerTwo.x && PlayerTwo.x > PlayerOne.x))
+                    ) {
+                        HpPlayer1.setProgress(HpPlayer1.getProgress() - PlayerOne.damage);
+                    }
+                    break;
+                case M:
+                    if ((PlayerTwo.direction && (PlayerTwo.x - 80 > PlayerOne.x && PlayerOne.x < PlayerTwo.x))
+                            || (!PlayerTwo.direction && (PlayerTwo.x + 80 < PlayerOne.x && PlayerOne.x > PlayerTwo.x))
+                    ) {
+                        HpPlayer2.setProgress(HpPlayer2.getProgress() - PlayerTwo.damage);
+                    }
                     break;
             }
         }
