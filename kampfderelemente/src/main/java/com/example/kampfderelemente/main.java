@@ -2,22 +2,25 @@ package com.example.kampfderelemente;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+
+/**
+ * TODO: Punch korrigieren
+ * TODO: Frames einfügen
+ * TODO: Frames zeichnen
+ */
 
 public class main extends Application {
 
@@ -29,8 +32,8 @@ public class main extends Application {
     public static int height = (int) screenBounds.getHeight();
 
     /*Design*/
-    private ProgressBar HpPlayer1 = new ProgressBar();
-    private ProgressBar HpPlayer2 = new ProgressBar();
+    private ProgressBar HpPlayer1 = new ProgressBar(100);
+    private ProgressBar HpPlayer2 = new ProgressBar(100);
 
     private Button[] abilities1 = new Button[4];
     private Button[] abilities2 = new Button[4];
@@ -109,6 +112,7 @@ public class main extends Application {
             switch (k) {
                 case A:
                     PlayerOne.setLayoutX(PlayerOne.getLayoutX() - 1);
+                    PlayerOne.x = (int)PlayerOne.getLayoutX();
                     PlayerOne.direction = true;
                     break;
                 case W:
@@ -117,6 +121,7 @@ public class main extends Application {
                     break;
                 case D:
                     PlayerOne.setLayoutX(PlayerOne.getLayoutX() + 1);
+                    PlayerOne.x = (int)PlayerOne.getLayoutX();
                     PlayerOne.direction = false;
                     break;
                 case I:
@@ -125,25 +130,31 @@ public class main extends Application {
                     break;
                 case J:
                     PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - 1);
+                    PlayerTwo.x = (int)PlayerTwo.getLayoutX();
                     PlayerTwo.direction = true;
                     break;
                 case L:
                     PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + 1);
+                    PlayerTwo.x = (int)PlayerTwo.getLayoutX();
                     PlayerTwo.direction = false;
                     break;//todo (delete me Mateja) du kannst die Buchstaben gerne anpassen
                 case Y: // todo: (only Akinci delete me) | notiz: direction "false" => rechts | "true" == links
                     // todo: 80 ist range, soll ich das dann als attributspeichern?
-                    if ((PlayerOne.direction && (PlayerOne.x - 80 > PlayerTwo.x && PlayerTwo.x < PlayerOne.x))
-                            || (!PlayerOne.direction && (PlayerOne.x + 80 < PlayerTwo.x && PlayerTwo.x > PlayerOne.x))
+                    System.out.println("PlayerOne x: " + PlayerOne.x);
+                    System.out.println("PlayerTwo x: " + PlayerTwo.x);
+                    if ((PlayerOne.direction && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - 80 && PlayerTwo.x < PlayerOne.x))
+                            || ((!PlayerOne.direction) && (PlayerTwo.x < PlayerOne.x + 80 && PlayerTwo.x > PlayerOne.x))
                     ) {
-                        HpPlayer1.setProgress(HpPlayer1.getProgress() - PlayerOne.damage);
+                        HpPlayer2.setProgress(HpPlayer2.getProgress() - PlayerOne.damage);
+                        System.out.println(HpPlayer2.getProgress());
                     }
                     break;
                 case M:
-                    if ((PlayerTwo.direction && (PlayerTwo.x - 80 > PlayerOne.x && PlayerOne.x < PlayerTwo.x))
-                            || (!PlayerTwo.direction && (PlayerTwo.x + 80 < PlayerOne.x && PlayerOne.x > PlayerTwo.x))
+                    if ((PlayerTwo.direction && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - 80 && PlayerOne.x < PlayerTwo.x))
+                            || ((!PlayerTwo.direction) && (PlayerOne.x < PlayerTwo.x + 80 && PlayerOne.x > PlayerTwo.x))
                     ) {
-                        HpPlayer2.setProgress(HpPlayer2.getProgress() - PlayerTwo.damage);
+                        HpPlayer1.setProgress(HpPlayer1.getProgress() - PlayerTwo.damage);
+                        System.out.println(HpPlayer1.getProgress());
                     }
                     break;
             }
