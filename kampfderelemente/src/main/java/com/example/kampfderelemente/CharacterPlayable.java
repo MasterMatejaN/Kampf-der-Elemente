@@ -4,7 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class CharacterPlayable extends Button {
+public class CharacterPlayable extends ImageView {
     int health;
     int width;
     int height;
@@ -22,9 +22,9 @@ public class CharacterPlayable extends Button {
         this.damage = damage;
         this.direction = direction;
         this.setLayoutX(x);
-        this.setLayoutY(y);
-        this.setWidth(width);
-        this.setHeight(height);
+        this.setLayoutY(y-height);
+        this.setFitWidth(width);
+        this.setFitHeight(height);
         /* //wenn wir zurück zu ImageView wechseln
         this.setFitHeight(health);
         this.setFitWidth(width);
