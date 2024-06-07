@@ -20,17 +20,34 @@ public class CharacterPlayable extends ImageView {
     int second_AttackAmount;
     int third_AttackAmount;
     int fourth_AttackAmount;
+    int first_AttackMaxAmount;
+    int second_AttackMaxAmount;
+    int third_AttackMaxAmount;
+    int fourth_AttackMaxAmount;
 
-    long Basic_Projektile_LastUsed = 0;
+    long basic_Attack_LastUsed = 0;
+    long basic_Projektile_LastUsed = 0;
     long first_Attack_LastUsed = 0;
     long second_Attack_LastUsed = 0;
     long third_Attack_LastUsed = 0;
     long fourth_Attack_LastUsed = 0;
+
     int first_Attack_Reload = 2000;
     int second_Attack_Reload = 2000;
     int third_Attack_Reload = 2000;
     int fourth_Attack_Reload = 2000;
 
+    long basic_Attack_Cooldown = 400;
+    long basic_Projektile_Cooldown = 3000;
+    long first_Attack_Cooldown = 100;
+    long second_Attack_Cooldown = 150;
+    long third_Attack_Cooldown = 2000;
+
+    int basic_Attack_Range = 100;
+    int first_Attack_Range = 250;
+    //beim jetzigen Stand des Spiels nicht benötigt, aber
+    // eventuell für die Zukunft relevant
+    long fourth_Attack_Cooldown = 100;
 
     boolean jumping = false;
     int heightDuringJump;
@@ -72,6 +89,10 @@ public class CharacterPlayable extends ImageView {
         this.second_AttackAmount = second_AttackAmount;
         this.third_AttackAmount = third_AttackAmount;
         this.fourth_AttackAmount = fourth_AttackAmount;
+        this.first_AttackMaxAmount = first_AttackAmount;
+        this.second_AttackMaxAmount = second_AttackAmount;
+        this.third_AttackMaxAmount = third_AttackAmount;
+        this.fourth_AttackMaxAmount = fourth_AttackAmount;
         this.ySneaking = y + (height - heightSneaking);
         this.yStand = y;
         this.heightStand = height;
@@ -87,8 +108,12 @@ public class CharacterPlayable extends ImageView {
             @Override
             public void handle(long l) {
                 if (timerCheckTime + 1000 < System.currentTimeMillis()) {
+                    if (first_Attack_LastUsed + first_Attack_Reload < System.currentTimeMillis() &&
+                            first_AttackAmount < first_AttackMaxAmount) {
+                        first_AttackAmount++;
+                    }
                     if (second_Attack_LastUsed + second_Attack_Reload < System.currentTimeMillis() &&
-                            second_AttackAmount < 3) {
+                            second_AttackAmount < second_AttackMaxAmount) {
                         second_AttackAmount++;
                     }
                     if (bleeding && bleedingStart + bleedingDuration > System.currentTimeMillis()) {
@@ -99,7 +124,7 @@ public class CharacterPlayable extends ImageView {
                     if (bleedingStart + bleedingDuration < System.currentTimeMillis()) {
                         bleedingStart = 0;
                         bleeding = false;
-                        System.out.println("Bleeding stopped");
+                        //System.out.println("no Bleeding");
                     }
                     timerCheckTime += 1000;
                 }

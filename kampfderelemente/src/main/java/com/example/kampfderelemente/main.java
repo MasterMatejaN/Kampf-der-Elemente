@@ -293,26 +293,40 @@ public class main extends Application {
                     PlayerTwo.setImage(new Image("file:images/waterbender_normal.png"));
                     break;
                 case Y: //todo: Da steht Basic Punch von Player1
-                    if ((PlayerOne.direction && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - 250 && PlayerTwo.x < PlayerOne.x))
-                            || ((!PlayerOne.direction) && (PlayerTwo.x < PlayerOne.x + 250 && PlayerTwo.x > PlayerOne.x))
+                    if (((PlayerOne.direction
+                            && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerOne.basic_Attack_Range
+                            && PlayerTwo.x < PlayerOne.x)
+                    ) || ((!PlayerOne.direction) && (PlayerTwo.x < PlayerOne.x + PlayerOne.basic_Attack_Range
+                            && PlayerTwo.x > PlayerOne.x)))
+                            && (System.currentTimeMillis() >
+                            PlayerOne.basic_Attack_LastUsed + PlayerOne.basic_Attack_Cooldown)
                     ) {
+                        PlayerOne.basic_Attack_LastUsed = System.currentTimeMillis();
                         PlayerTwo.health = (PlayerTwo.health - PlayerOne.damage);
                         System.out.println(PlayerTwo.health);
                         updateCharacterHealth();
                     }
                     break;
                 case M://todo: Da steht Basic Punch von Player2
-                    if ((PlayerTwo.direction && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - 250 && PlayerOne.x < PlayerTwo.x))
-                            || ((!PlayerTwo.direction) && (PlayerOne.x < PlayerTwo.x + 250 && PlayerOne.x > PlayerTwo.x))
+                    if (((PlayerTwo.direction
+                            && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.basic_Attack_Range
+                            && PlayerOne.x < PlayerTwo.x)
+                    ) || ((!PlayerTwo.direction) && (PlayerOne.x < PlayerTwo.x + PlayerTwo.basic_Attack_Range
+                            && PlayerOne.x > PlayerTwo.x)))
+                            && (System.currentTimeMillis() >
+                            PlayerTwo.basic_Attack_LastUsed + PlayerTwo.basic_Attack_Cooldown)
                     ) {
+                        PlayerTwo.basic_Attack_LastUsed = System.currentTimeMillis();
                         PlayerOne.health = (PlayerOne.health - PlayerTwo.damage);
                         System.out.println(PlayerOne.health);
                         updateCharacterHealth();
                     }
                     break;
                 case X://todo: Da steht Basic Projectile von Player1
-                    if (System.currentTimeMillis() > PlayerOne.Basic_Projektile_LastUsed + 3000) {
-                        PlayerOne.Basic_Projektile_LastUsed = System.currentTimeMillis();
+                    if (System.currentTimeMillis() >
+                            PlayerOne.basic_Projektile_LastUsed + PlayerOne.basic_Projektile_Cooldown
+                    ) {
+                        PlayerOne.basic_Projektile_LastUsed = System.currentTimeMillis();
                         Projectile projectilePlayer1 = new Projectile(
                                 150, 150, PlayerOne.x, PlayerOne.y + PlayerOne.height / 2, 20, 5,
                                 false, 1, PlayerOne.direction
@@ -322,8 +336,10 @@ public class main extends Application {
                     }
                     break;
                 case N://todo: Da steht Basic Projectile von Player2
-                    if (System.currentTimeMillis() > PlayerTwo.Basic_Projektile_LastUsed + 3000) {
-                        PlayerTwo.Basic_Projektile_LastUsed = System.currentTimeMillis();
+                    if (System.currentTimeMillis() >
+                            PlayerTwo.basic_Projektile_LastUsed + PlayerTwo.basic_Projektile_Cooldown
+                    ) {
+                        PlayerTwo.basic_Projektile_LastUsed = System.currentTimeMillis();
                         Projectile projectilePlayer2 = new Projectile(
                                 150, 150, PlayerTwo.x, PlayerTwo.y + PlayerTwo.height / 2, 20, 5,
                                 false, 2, PlayerTwo.direction
@@ -333,38 +349,58 @@ public class main extends Application {
                     }
                     break;
                 case DIGIT1://todo: Da steht water whip von Player2
-                    if ((PlayerTwo.direction &&
-                            (PlayerOne.x + PlayerOne.width > PlayerTwo.x - 250 && PlayerOne.x < PlayerTwo.x))) {
-                        PlayerOne.health = (PlayerOne.health -
-                                (PlayerTwo.damage + (PlayerTwo.x - PlayerOne.x))
-                        );
-                        System.out.println("damage: " +
-                                (PlayerTwo.damage + (PlayerTwo.x - PlayerOne.x))
-                        );
-                        System.out.println(PlayerOne.health);
-                        updateCharacterHealth();
-                    }
-                    if (((!PlayerTwo.direction) && (PlayerOne.x < PlayerTwo.x + 250 && PlayerOne.x > PlayerTwo.x))) {
-                        PlayerOne.health = (PlayerOne.health -
-                                (PlayerTwo.damage + (PlayerOne.x - PlayerTwo.x))
-                        );
-                        System.out.println("damage: " +
-                                (PlayerTwo.damage + (PlayerOne.x - PlayerTwo.x))
-                        );
-                        System.out.println(PlayerOne.health);
-                        updateCharacterHealth();
+                    if (PlayerTwo.second_AttackAmount > 0) {
+                        if ((PlayerTwo.direction
+                                && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.first_Attack_Range
+                                && PlayerOne.x < PlayerTwo.x))
+                                && (System.currentTimeMillis() >
+                                PlayerTwo.first_Attack_LastUsed + PlayerTwo.first_Attack_Cooldown)
+                        ) {
+                            PlayerOne.health = (PlayerOne.health -
+                                    ((PlayerTwo.damage + (PlayerTwo.x - (PlayerOne.x + PlayerOne.width))) / 10)
+                            );
+                            System.out.println("damage: " +
+                                    ((PlayerTwo.damage + (PlayerTwo.x - (PlayerOne.x + PlayerOne.width))) / 10)
+                            );
+                            System.out.println(PlayerOne.health);
+                            updateCharacterHealth();
+                        }
+                        if (((!PlayerTwo.direction)
+                                && (PlayerOne.x < PlayerTwo.x + PlayerTwo.first_Attack_Range
+                                && PlayerOne.x > PlayerTwo.x))
+                                && (System.currentTimeMillis() >
+                                PlayerTwo.first_Attack_LastUsed + PlayerTwo.first_Attack_Cooldown)
+                        ) {
+                            PlayerOne.health = (PlayerOne.health -
+                                    ((PlayerTwo.damage + (PlayerOne.x - PlayerTwo.x)) / 10)
+                            );
+                            System.out.println("damage: " +
+                                    ((PlayerTwo.damage + (PlayerOne.x - PlayerTwo.x)) / 10)
+                            );
+                            System.out.println(PlayerOne.health);
+                            updateCharacterHealth();
+                        }
+                        PlayerTwo.first_Attack_LastUsed = System.currentTimeMillis();
+                        PlayerTwo.first_AttackAmount--;
                     }
                     break;
                 case NUMPAD2://todo: Da steht ice spike von Player2
                     if (PlayerTwo.second_AttackAmount > 0) {
+                        boolean projectileDirection;
                         Projectile projectilePlayer2 = new Projectile(
                                 150, 150, PlayerTwo.x, PlayerTwo.y + PlayerTwo.height / 2, 20, 5,
-                                true, 2, PlayerTwo.direction
+                                true, 2, projectileDirection = PlayerTwo.direction
                         );
                         int random = (int) ((Math.random() * 3) + 1);
-                        if (random == 1) projectilePlayer2.setImage(new Image("file:images/ice_spike1.png"));
-                        else if (random == 2) projectilePlayer2.setImage(new Image("file:images/ice_spike2.png"));
-                        else projectilePlayer2.setImage(new Image("file:images/ice_spike3.png"));
+                        if (projectileDirection) {// todo hier ice-spike bild mit reversed ersetzen
+                            if (random == 1) projectilePlayer2.setImage(new Image("file:images/ice_spike1.png"));
+                            else if (random == 2) projectilePlayer2.setImage(new Image("file:images/ice_spike2.png"));
+                            else projectilePlayer2.setImage(new Image("file:images/ice_spike3.png"));
+                        } else {
+                            if (random == 1) projectilePlayer2.setImage(new Image("file:images/ice_spike1.png"));
+                            else if (random == 2) projectilePlayer2.setImage(new Image("file:images/ice_spike2.png"));
+                            else projectilePlayer2.setImage(new Image("file:images/ice_spike3.png"));
+                        }
                         everything.getChildren().add(projectilePlayer2);
                         PlayerTwo.second_Attack_LastUsed = System.currentTimeMillis();
                         PlayerTwo.second_AttackAmount--;
@@ -376,41 +412,60 @@ public class main extends Application {
                 case NUMPAD4:
                     break;
                 case F://todo: Da steht water whip von Player1
-                    if ((PlayerOne.direction &&
-                            (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - 250 && PlayerTwo.x < PlayerOne.x))
-                    ) {
-                        PlayerTwo.health = (PlayerTwo.health -
-                                (PlayerOne.damage + (PlayerOne.x - PlayerTwo.x))
-                        );
-                        System.out.println("damage: " +
-                                (PlayerOne.damage + (PlayerOne.x - PlayerTwo.x))
-                        );
-                        System.out.println(PlayerTwo.health);
-                        updateCharacterHealth();
-                    }
-                    if (((!PlayerOne.direction) &&
-                            (PlayerTwo.x < PlayerOne.x + 250 && PlayerTwo.x > PlayerOne.x))
-                    ) {
-                        PlayerTwo.health = (PlayerTwo.health -
-                                (PlayerOne.damage + (PlayerTwo.x - PlayerOne.x))
-                        );
-                        System.out.println("damage: " +
-                                (PlayerOne.damage + (PlayerTwo.x - PlayerOne.x))
-                        );
-                        System.out.println(PlayerTwo.health);
-                        updateCharacterHealth();
+                    if (PlayerOne.second_AttackAmount > 0) {
+                        if ((PlayerOne.direction
+                                && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerTwo.first_Attack_Range
+                                && PlayerTwo.x < PlayerOne.x)
+                        )
+                                && (System.currentTimeMillis() >
+                                PlayerOne.first_Attack_LastUsed + PlayerOne.first_Attack_Cooldown)
+                        ) {
+                            PlayerTwo.health = (PlayerTwo.health -
+                                    ((PlayerOne.damage + (PlayerOne.x - PlayerTwo.x)) / 10)
+                            );
+                            System.out.println("damage: " +
+                                    ((PlayerOne.damage + (PlayerOne.x - PlayerTwo.x)) / 10)
+                            );
+                            System.out.println(PlayerTwo.health);
+                            updateCharacterHealth();
+                        }
+                        if (((!PlayerOne.direction)
+                                && (PlayerTwo.x < PlayerOne.x + PlayerTwo.first_Attack_Range
+                                && PlayerTwo.x > PlayerOne.x)
+                        )
+                                && (System.currentTimeMillis() >
+                                PlayerOne.first_Attack_LastUsed + PlayerOne.first_Attack_Cooldown)
+                        ) {
+                            PlayerTwo.health = (PlayerTwo.health -
+                                    ((PlayerOne.damage + (PlayerTwo.x - PlayerOne.x)) / 10)
+                            );
+                            System.out.println("damage: " +
+                                    ((PlayerOne.damage + (PlayerTwo.x - PlayerOne.x)) / 10)
+                            );
+                            System.out.println(PlayerTwo.health);
+                            updateCharacterHealth();
+                        }
+                        PlayerOne.first_Attack_LastUsed = System.currentTimeMillis();
+                        PlayerOne.first_AttackAmount--;
                     }
                     break;
                 case G:
                     if (PlayerOne.second_AttackAmount > 0) {
+                        boolean projectileDirection;
                         Projectile projectilePlayer1 = new Projectile(
                                 150, 150, PlayerOne.x, PlayerOne.y + PlayerOne.height / 2, 20, 5,
-                                true, 1, PlayerOne.direction
+                                true, 1, projectileDirection = PlayerOne.direction
                         );
                         int random = (int) ((Math.random() * 3) + 1);
-                        if (random == 1) projectilePlayer1.setImage(new Image("file:images/ice_spike1.png"));
-                        else if (random == 2) projectilePlayer1.setImage(new Image("file:images/ice_spike2.png"));
-                        else projectilePlayer1.setImage(new Image("file:images/ice_spike3.png"));
+                        if (projectileDirection) {// todo hier ice-spike bild mit reversed ersetzen
+                            if (random == 1) projectilePlayer1.setImage(new Image("file:images/ice_spike1.png"));
+                            else if (random == 2) projectilePlayer1.setImage(new Image("file:images/ice_spike2.png"));
+                            else projectilePlayer1.setImage(new Image("file:images/ice_spike3.png"));
+                        } else {
+                            if (random == 1) projectilePlayer1.setImage(new Image("file:images/ice_spike1.png"));
+                            else if (random == 2) projectilePlayer1.setImage(new Image("file:images/ice_spike2.png"));
+                            else projectilePlayer1.setImage(new Image("file:images/ice_spike3.png"));
+                        }
                         everything.getChildren().add(projectilePlayer1);
                         PlayerOne.second_Attack_LastUsed = System.currentTimeMillis();
                         PlayerOne.second_AttackAmount--;
