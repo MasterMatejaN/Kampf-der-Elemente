@@ -56,7 +56,6 @@ public class Projectile extends ImageView {
                 ) {
                     x += speed;
                     setLayoutX(x);
-                    main.PlayerTwo.setLayoutY(main.PlayerTwo.y);
                     System.out.println(
                             "y  = " + y
                                     + "\nx  = " + x
@@ -81,7 +80,7 @@ public class Projectile extends ImageView {
                             System.out.println("Bleeding started");
                             main.PlayerTwo.bleeding = true;
                             main.PlayerTwo.bleedingStart = System.currentTimeMillis();
-                            main.PlayerTwo.health = main.PlayerTwo.health - (damage / 4) * 3;
+                            main.PlayerTwo.health = main.PlayerTwo.health - (damage / 5);
                         }
                         updateCharacterHealth();
                         System.out.println("clear hit with my projectile-boi");
@@ -93,20 +92,30 @@ public class Projectile extends ImageView {
                     x -= speed;
                     setLayoutX(x);
                     if ((
-                            (x <= main.PlayerTwo.x + 10 && x < main.PlayerTwo.x + main.PlayerTwo.width)
+                            (x <= main.PlayerTwo.x + 10 && x > main.PlayerTwo.x + main.PlayerTwo.width)
                                     ||
                                     (x < main.PlayerTwo.x + main.PlayerTwo.width && x > main.PlayerTwo.x)
                     ) &&
                             (((y + height > main.PlayerTwo.y) && y < main.PlayerTwo.y + main.PlayerTwo.height))
                     ) {
                         //todo collision, give damage to player 2
+                        System.out.println(
+                                "y  = " + y
+                                        + "\nx  = " + x
+                                        + "\nheight = " + height
+                                        + "\nwidth = " + width
+                                        + "\nmain.PlayerTwo.y = " + main.PlayerTwo.y
+                                        + "\nmain.PlayerTwo.x = " + main.PlayerTwo.x
+                                        + "\nmain.PlayerTwo.height = " + main.PlayerTwo.height
+                                        + "\nmain.PlayerTwo.width = " + main.PlayerTwo.width
+                        );
                         if (!isIceSpike) {
                             main.PlayerTwo.health = main.PlayerTwo.health - damage;
                         } else {
                             System.out.println("Bleeding started");
                             main.PlayerTwo.bleeding = true;
                             main.PlayerTwo.bleedingStart = System.currentTimeMillis();
-                            main.PlayerTwo.health = main.PlayerTwo.health - (damage / 4) * 3;
+                            main.PlayerTwo.health = main.PlayerTwo.health - (damage / 5);
                         }
                         updateCharacterHealth();
                         System.out.println("clear hit with my projectile-boi");
@@ -119,7 +128,6 @@ public class Projectile extends ImageView {
                 ) {
                     x += speed;
                     setLayoutX(x);
-                    main.PlayerOne.setLayoutY(main.PlayerOne.y);
                     System.out.println("y  = " + y
                             + "\nheight = " + height
                             + "\nmain.PlayerOne.y = " + main.PlayerOne.y
@@ -140,7 +148,7 @@ public class Projectile extends ImageView {
                             System.out.println("Bleeding started");
                             main.PlayerOne.bleeding = true;
                             main.PlayerOne.bleedingStart = System.currentTimeMillis();
-                            main.PlayerOne.health = main.PlayerOne.health - (damage / 4) * 3;
+                            main.PlayerOne.health = main.PlayerOne.health - (damage / 5);
                         }
                         updateCharacterHealth();
                         System.out.println("clear hit with my projectile-boi");
@@ -152,7 +160,7 @@ public class Projectile extends ImageView {
                     x -= speed;
                     setLayoutX(x);
                     if ((
-                            (x <= main.PlayerOne.x + 10 && x < main.PlayerOne.x + main.PlayerOne.width)
+                            (x <= main.PlayerOne.x + 10 && x > main.PlayerOne.x + main.PlayerOne.width)
                                     ||
                                     (x < main.PlayerOne.x + main.PlayerOne.width && x > main.PlayerOne.x)
                     ) &&
@@ -165,7 +173,7 @@ public class Projectile extends ImageView {
                             System.out.println("Bleeding started");
                             main.PlayerOne.bleeding = true;
                             main.PlayerOne.bleedingStart = System.currentTimeMillis();
-                            main.PlayerOne.health = main.PlayerOne.health - (damage / 4) * 3;
+                            main.PlayerOne.health = main.PlayerOne.health - (damage / 5);
                         }
                         updateCharacterHealth();
                         System.out.println("clear hit with my projectile-boi");

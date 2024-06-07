@@ -87,15 +87,16 @@ public class CharacterPlayable extends ImageView {
             @Override
             public void handle(long l) {
                 if (timerCheckTime + 1000 < System.currentTimeMillis()) {
-                    if (second_Attack_LastUsed + second_Attack_Reload < System.currentTimeMillis()){
+                    if (second_Attack_LastUsed + second_Attack_Reload < System.currentTimeMillis() &&
+                            second_AttackAmount < 3) {
                         second_AttackAmount++;
                     }
                     if (bleeding && bleedingStart + bleedingDuration > System.currentTimeMillis()) {
-                        health -= (damage/5)*2;
+                        health -= (damage / 5) * 2;
                         updateCharacterHealth();
                         System.out.println("Bleeding");
                     }
-                    if (bleedingStart + bleedingDuration < System.currentTimeMillis()){
+                    if (bleedingStart + bleedingDuration < System.currentTimeMillis()) {
                         bleedingStart = 0;
                         bleeding = false;
                         System.out.println("Bleeding stopped");
