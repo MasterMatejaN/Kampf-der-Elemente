@@ -1,6 +1,7 @@
 package com.example.kampfderelemente;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -115,12 +116,26 @@ public class CharacterPlayable extends ImageView {
         timer();
     }
 
-
     public void timer() {
         AnimationTimer animationTimer = new AnimationTimer() {
             long time;
             @Override
             public void handle(long l) {
+                Button rematch = new Button("Rematch?");
+                rematch.setLayoutX(screenBounds.getWidth() /2);
+                rematch.setLayoutY(screenBounds.getHeight()/2);
+                rematch.setOnMousePressed((r) -> {
+                    System.out.println(everything.getChildren());
+                    everything.getChildren().remove(everything.getChildren().size()-1);
+                    newMatch();
+                });
+                if(PlayerOne.health <= 0) {
+                    System.out.println("P2 WINS");
+                    everything.getChildren().add(rematch);
+                } else if (PlayerTwo.health <= 0){
+                    System.out.println("P1 WINS");
+                    everything.getChildren().add(rematch);
+                }
                 if (timerCheckTime + 1000 < System.currentTimeMillis()) {
                     //reload attacks
                     if (first_Attack_LastUsed + first_Attack_Reload < System.currentTimeMillis() &&

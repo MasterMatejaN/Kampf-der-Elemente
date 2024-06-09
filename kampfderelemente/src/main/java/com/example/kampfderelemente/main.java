@@ -16,27 +16,28 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-/**
- * TODO: Punch korrigieren
- * TODO: Animationen fixen
- * TODO: Frames zeichnen
- */
 
 public class main extends Application {
 
     /*Overall*/
-    private Group everything = new Group();
-    private Scene fight = new Scene(everything);
+    public static Group everything = new Group();
+    public static Scene fight = new Scene(everything);
     public static Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
     public static int width = (int) screenBounds.getWidth();
     public static int height = (int) screenBounds.getHeight();
 
     /*Design*/
+    static List<ProgressBar> p = new ArrayList<>();
+
     public static ProgressBar HpPlayer1 = new ProgressBar(100);
     public static ProgressBar HpPlayer2 = new ProgressBar(100);
+
+    public static ProgressBar HpPlayer12 = new ProgressBar(100);
+    public static ProgressBar HpPlayer22 = new ProgressBar(100);
 
     private Button[] abilities1 = new Button[4];
     private Button[] abilities2 = new Button[4];
@@ -51,8 +52,6 @@ public class main extends Application {
     );
 
     private long lastinputPlayerOne = 0;
-    private boolean PlayerOneStand = false;
-
     public static Set<KeyCode> isPressed = new HashSet<>();
     public static boolean go = false;
     public static boolean go1 = false;
@@ -71,6 +70,8 @@ public class main extends Application {
         System.out.println("PlayerOne.x = " + PlayerOne.x);
         System.out.println("PlayerTwo.x = " + PlayerTwo.x);
 
+        p.add(HpPlayer1);
+        p.add(HpPlayer2);
 
         ImageView ground = new ImageView(new Image(("file:images/ground.png")));
         ground.setX(0);
@@ -153,10 +154,69 @@ public class main extends Application {
             System.out.println(isPressed);
         });
 
+
+
         everything.getChildren().addAll(background, ground, PlayerOne, PlayerTwo);
-        showabilities();
+        everything.getChildren().add(p.get(0));
+        everything.getChildren().add(p.get(1));
+
+        HpPlayer1.setProgress((double) PlayerOne.health / 100);
+        HpPlayer2.setProgress((double) PlayerTwo.health / 100);
+
+        HpPlayer1.setLayoutX(screenBounds.getWidth()/6);
+        HpPlayer2.setLayoutX(screenBounds.getWidth()*5/6);
         stage.setScene(fight);
         stage.show();
+    }
+
+    public static void newMatch() {
+        PlayerOne = new CharacterPlayable(
+                100, 250, 500, 300, (int) (width / 10), groundY, 5, 250, false, 5,
+                2, 2, 1, 1
+        );
+        PlayerTwo = new CharacterPlayable(
+                100, 250, 500, 300, (int) (width / 10) * 7, groundY, 5, 250, true, 5,
+                2, 2, 1, 1
+        );
+
+        PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
+        PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+        PlayerOne.setLayoutX(PlayerOne.x);
+        PlayerTwo.setLayoutX(PlayerTwo.x);
+
+        ImageView background = new ImageView(new Image("file:images/background_pixel.png"));
+        background.setFitWidth((int) screenBounds.getWidth());
+        background.setFitHeight((int) screenBounds.getHeight());
+
+        System.out.println("PlayerOne.x = " + PlayerOne.x);
+        System.out.println("PlayerTwo.x = " + PlayerTwo.x);
+
+        updateCharacterHealth();
+
+        ImageView ground = new ImageView(new Image(("file:images/ground.png")));
+        ground.setX(0);
+        ground.setY((int) screenBounds.getHeight() - height / 4);
+        ground.setFitWidth(width);
+        ground.setFitHeight(height / 4);
+
+        fight.setOnKeyPressed(e -> {
+            isPressed.add(e.getCode());
+            System.out.println(isPressed);
+        });
+
+        everything.getChildren().addAll(background, ground, PlayerOne, PlayerTwo);
+
+        p.remove(0);
+        p.remove(0);
+        HpPlayer1 = new ProgressBar(100);
+        HpPlayer2 = new ProgressBar(100);
+        p.add(HpPlayer1);
+        p.add(HpPlayer2);
+
+        everything.getChildren().addAll(p.get(0), p.get(1));
+
+        p.get(0).setLayoutX(screenBounds.getWidth()/6);
+        p.get(1).setLayoutX(screenBounds.getWidth()*5/6);
     }
 
     long a = 0;
@@ -630,16 +690,7 @@ public class main extends Application {
     public static void updateCharacterHealth() {
         HpPlayer1.setProgress((double) PlayerOne.health / 100);
         HpPlayer2.setProgress((double) PlayerTwo.health / 100);
-    }
-
-    public void showabilities() {
-        everything.getChildren().add(HpPlayer1);
-        everything.getChildren().add(HpPlayer2);
-
-        HpPlayer1.setProgress((double) PlayerOne.health / 100);
-        HpPlayer2.setProgress((double) PlayerTwo.health / 100);
-
-        HpPlayer1.setLayoutX(50);
-        HpPlayer2.setLayoutX(500);
+        HpPlayer12.setProgress((double) PlayerOne.health / 100);
+        HpPlayer22.setProgress((double) PlayerTwo.health / 100);
     }
 }
