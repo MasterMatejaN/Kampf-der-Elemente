@@ -106,31 +106,10 @@ public class CharacterPlayable extends ImageView {
         timer();
     }
 
-    public void moveleft() {
-        AnimationTimer walkingleft = new AnimationTimer() {
-            long time;
-            @Override
-            public void handle(long l) {
-                if(time + 500 < System.currentTimeMillis()) {
-                    PlayerOne.setImage(new Image("file:images/waterbender_normal_reversed.png"));
-                    go = false;
-                } else {
-                    PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
-                    go = true;
-                }
-            }
-
-            @Override
-            public void start() {
-                time = System.currentTimeMillis();
-                super.start();
-            }
-        };
-        walkingleft.start();
-    }
 
     public void timer() {
         AnimationTimer animationTimer = new AnimationTimer() {
+            long time;
             @Override
             public void handle(long l) {
                 if (timerCheckTime + 1000 < System.currentTimeMillis()) {
@@ -177,6 +156,7 @@ public class CharacterPlayable extends ImageView {
             @Override
             public void start() {
                 timerCheckTime = System.currentTimeMillis();
+                time = System.currentTimeMillis();
                 super.start();
             }
 

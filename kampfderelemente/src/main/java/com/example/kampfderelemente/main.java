@@ -11,6 +11,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -54,6 +55,7 @@ public class main extends Application {
 
     public static Set<KeyCode> isPressed = new HashSet<>();
     public static boolean go = false;
+    public static boolean go1 = false;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -62,25 +64,44 @@ public class main extends Application {
         PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
         PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
 
+        ImageView background = new ImageView(new Image("file:images/background_pixel.png"));
+        background.setFitWidth((int) screenBounds.getWidth());
+        background.setFitHeight((int) screenBounds.getHeight());
 
         System.out.println("PlayerOne.x = " + PlayerOne.x);
         System.out.println("PlayerTwo.x = " + PlayerTwo.x);
 
 
-        ImageView ground = new ImageView();
+        ImageView ground = new ImageView(new Image(("file:images/ground.png")));
         ground.setX(0);
-        ground.setY(groundY);
+        ground.setY((int) screenBounds.getHeight() - height / 4);
         ground.setFitWidth(width);
-        ground.setFitHeight(height / 6);
+        ground.setFitHeight(height / 4);
 
         fight.setOnKeyReleased(e -> {
             boolean containedS = false;
-            boolean containedDown = false;
+            boolean containedK = false;
+            boolean containedA = false;
+            boolean containedD = false;
+            boolean containedJ = false;
+            boolean containedL = false;
             if (isPressed.contains(KeyCode.S)) {
                 containedS = true;
             }
-            if (isPressed.contains(KeyCode.DOWN)) {
-                containedDown = true;
+            if (isPressed.contains(KeyCode.K)) {
+                containedK = true;
+            }
+            if(isPressed.contains(KeyCode.A)) {
+                containedA = true;
+            }
+            if(isPressed.contains(KeyCode.D)) {
+                containedD = true;
+            }
+            if(isPressed.contains(KeyCode.J)) {
+                containedJ = true;
+            }
+            if(isPressed.contains(KeyCode.L)) {
+                containedL = true;
             }
             isPressed.remove(e.getCode());
             if (!isPressed.contains(KeyCode.S) && containedS && !PlayerOne.frozen) {
@@ -90,12 +111,24 @@ public class main extends Application {
                 PlayerOne.height = PlayerOne.heightStand;
                 PlayerOne.setFitHeight(PlayerOne.height);
             }
-            if (!isPressed.contains(KeyCode.DOWN) && containedDown && !PlayerTwo.frozen) {
+            if (!isPressed.contains(KeyCode.K) && containedK && !PlayerTwo.frozen) {
                 PlayerTwo.isSneaking = false;
                 PlayerTwo.y = PlayerTwo.yStand;
                 PlayerTwo.setLayoutY(PlayerTwo.y);
                 PlayerTwo.height = PlayerTwo.heightStand;
                 PlayerTwo.setFitHeight(PlayerTwo.height);
+            }
+            if(!isPressed.contains(KeyCode.A) && containedA) {
+                a = 0;
+            }
+            if(!isPressed.contains(KeyCode.D) && containedD) {
+                b = 0;
+            }
+            if(!isPressed.contains(KeyCode.J) && containedJ) {
+                c = 0;
+            }
+            if(!isPressed.contains(KeyCode.L) && containedL) {
+                d = 0;
             }
             System.out.println(isPressed);
         });
@@ -114,49 +147,10 @@ public class main extends Application {
             }
         });
         t.start();
-/*
-        Thread animation = new Thread(() -> {
-            while (true) {
-                for (KeyCode k : isPressed) {
-                    switch (k) {
-                        case D:
-                            try {
-                                Thread.sleep(50);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            if (go) {
-                                go = false;
-                                PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
-                            } else {
-                                go = true;
-                                PlayerOne.setImage(new Image("file:images/waterbender_walking.png"));
-                            }
-                        default:
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            System.out.println("hey");
-                            if (go) {
-                                go = false;
-                                PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
-                            } else {
-                                go = true;
-                                PlayerOne.setImage(new Image("file:images/waterbender_standing.png"));
-                            }
-
-                    }
-                }
-            }
-        });
-        animation.start();*/
 
         fight.setOnKeyPressed(e -> {
             isPressed.add(e.getCode());
             System.out.println(isPressed);
-
         });
 
 
@@ -202,12 +196,18 @@ public class main extends Application {
 //                }
 //            }
 //        });
-        everything.getChildren().addAll(ground, PlayerOne, PlayerTwo);
+        everything.getChildren().addAll(background, ground, PlayerOne, PlayerTwo);
         showabilities();
         stage.setScene(fight);
         stage.show();
     }
 
+    long a = 0;
+    long b = 0;
+    long c = 0;
+    long d = 0;
+    int counterPlayer1 = 1;
+    int counterPlayer2 = 1;
     private void handleIsPressed(Set<KeyCode> isPressed) {
         for (KeyCode k : isPressed) {
             switch (k) {
@@ -217,9 +217,20 @@ public class main extends Application {
                         PlayerOne.x = (int) PlayerOne.getLayoutX();
                         PlayerOne.direction = true;
                         //PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
-                        PlayerOne.moveleft();
-
                         lastinputPlayerOne = System.nanoTime();
+                        if(a == 0) {
+                            a = System.currentTimeMillis();
+                        }
+                        if(a+500 < System.currentTimeMillis()) {
+                            if(counterPlayer1 == 1) {
+                                PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
+                                counterPlayer1++;
+                            } else {
+                                PlayerOne.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                                counterPlayer1--;
+                            }
+                            a+=500;
+                        }
                     }
                     break;
                 case W:
@@ -246,16 +257,29 @@ public class main extends Application {
                         PlayerOne.x = (int) PlayerOne.getLayoutX();
                         PlayerOne.direction = false;
                         lastinputPlayerOne = System.currentTimeMillis();
+                        if(b == 0) {
+                            b = System.currentTimeMillis();
+                        }
+                        if(b+500 < System.currentTimeMillis()) {
+                            if(counterPlayer1 == 1) {
+                                PlayerOne.setImage(new Image("file:images/waterbender_walking.png"));
+                                counterPlayer1++;
+                            } else {
+                                PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
+                                counterPlayer1--;
+                            }
+                            b+=500;
+                        }
                     }
                     break;
-                case UP:
+                case I:
                     if (!PlayerTwo.frozen) {
                         if (PlayerTwo.y == groundY) {
                             PlayerTwo.jump();
                         }
                     }
                     break;
-                case DOWN:
+                case K:
                     if (!PlayerTwo.frozen) {
                         PlayerTwo.isSneaking = true;
                         //todo delete isSneaking (vllt doch nicht, wenn beim sneaken "gehen" animiert wird...)
@@ -266,23 +290,47 @@ public class main extends Application {
                         PlayerTwo.setFitHeight(PlayerTwo.height);
                     }
                     break;
-                case LEFT:
+                case J:
                     if (!PlayerTwo.frozen) {
                         PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - PlayerTwo.speed);
                         PlayerTwo.x = (int) PlayerTwo.getLayoutX();
                         PlayerTwo.direction = true;
-                        PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                        if(c == 0) {
+                            c = System.currentTimeMillis();
+                        }
+                        if(c+500 < System.currentTimeMillis()) {
+                            if(counterPlayer2 == 1) {
+                                PlayerTwo.setImage(new Image("file:images/waterbender_walking_reversed.png"));
+                                counterPlayer2++;
+                            } else {
+                                PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                                counterPlayer2--;
+                            }
+                            c+=500;
+                        }
                     }
                     break;
-                case RIGHT:
+                case L:
                     if (!PlayerTwo.frozen) {
                         PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + PlayerTwo.speed);
                         PlayerTwo.x = (int) PlayerTwo.getLayoutX();
                         PlayerTwo.direction = false;
-                        PlayerTwo.setImage(new Image("file:images/waterbender_normal.png"));
+                        if(d == 0) {
+                            d = System.currentTimeMillis();
+                        }
+                        if(d+500 < System.currentTimeMillis()) {
+                            if(counterPlayer2 == 1) {
+                                PlayerTwo.setImage(new Image("file:images/waterbender_walking.png"));
+                                counterPlayer2++;
+                            } else {
+                                PlayerTwo.setImage(new Image("file:images/waterbender_normal.png"));
+                                counterPlayer2--;
+                            }
+                            d+=500;
+                        }
                     }
                     break;
-                case Y: //todo: Da steht Basic Punch Player1
+                case Q: //todo: Da steht Basic Punch Player1
                     if (((PlayerOne.direction && !PlayerTwo.frozen
                             && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerOne.basic_Attack_Range
                             && PlayerTwo.x < PlayerOne.x)
@@ -297,7 +345,7 @@ public class main extends Application {
                         updateCharacterHealth();
                     }
                     break;
-                case M://todo: Da steht Basic Punch Player2
+                case U://todo: Da steht Basic Punch Player2
                     if (((PlayerTwo.direction
                             && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.basic_Attack_Range
                             && PlayerOne.x < PlayerTwo.x)
@@ -312,7 +360,7 @@ public class main extends Application {
                         updateCharacterHealth();
                     }
                     break;
-                case X://todo: Da steht Basic Projectile Player1
+                case E://todo: Da steht Basic Projectile Player1
                     if (System.currentTimeMillis() >
                             PlayerOne.basic_Projektile_LastUsed + PlayerOne.basic_Projektile_Cooldown
                     ) {
@@ -325,7 +373,7 @@ public class main extends Application {
                         everything.getChildren().add(projectilePlayer1);
                     }
                     break;
-                case N://todo: Da steht Basic Projectile Player2
+                case O://todo: Da steht Basic Projectile Player2
                     if (System.currentTimeMillis() >
                             PlayerTwo.basic_Projektile_LastUsed + PlayerTwo.basic_Projektile_Cooldown
                     ) {
@@ -338,7 +386,7 @@ public class main extends Application {
                         everything.getChildren().add(projectilePlayer2);
                     }
                     break;
-                case DIGIT1://todo: Da steht water-whip Player2
+                case P://todo: Da steht water-whip Player2
                     if (PlayerTwo.second_AttackAmount > 0) {
                         if ((PlayerTwo.direction
                                 && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.first_Attack_Range
@@ -374,7 +422,7 @@ public class main extends Application {
                         PlayerTwo.first_AttackAmount--;
                     }
                     break;
-                case NUMPAD2://todo: Da steht ice-spike Player2
+                case H://todo: Da steht ice-spike Player2
                     if (PlayerTwo.second_AttackAmount > 0) {
                         boolean projectileDirection;
                         Projectile projectilePlayer2 = new Projectile(
@@ -396,7 +444,7 @@ public class main extends Application {
                         PlayerTwo.second_AttackAmount--;
                     }
                     break;
-                case NUMPAD3://todo: Da steht frost-pillar Player2
+                case N://todo: Da steht frost-pillar Player2
                     if (PlayerTwo.third_AttackAmount > 0) {
                         if (!PlayerOne.jumping && (System.currentTimeMillis() >
                                 PlayerTwo.third_Attack_LastUsed + PlayerTwo.third_Attack_Cooldown)) {
@@ -410,7 +458,7 @@ public class main extends Application {
                         }
                     }
                     break;
-                case NUMPAD4://todo: Da steht enhanced-movement Player2
+                case M://todo: Da steht enhanced-movement Player2
                     if (PlayerTwo.fourth_AttackAmount > 0) {
                         PlayerTwo.fourth_Attack_LastUsed = System.currentTimeMillis();
                         if (PlayerTwo.first_AttackAmount < PlayerTwo.first_AttackMaxAmount) {
@@ -426,7 +474,7 @@ public class main extends Application {
                         PlayerTwo.fourth_AttackAmount--;
                     }
                     break;
-                case F://todo: Da steht water-whip Player1
+                case R://todo: Da steht water-whip Player1
                     if (PlayerOne.second_AttackAmount > 0) {
                         if ((PlayerOne.direction
                                 && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerTwo.first_Attack_Range
@@ -464,7 +512,7 @@ public class main extends Application {
                         PlayerOne.first_AttackAmount--;
                     }
                     break;
-                case G://todo: Da steht ice-spike Player1
+                case X://todo: Da steht ice-spike Player1
                     if (PlayerOne.second_AttackAmount > 0) {
                         boolean projectileDirection;
                         Projectile projectilePlayer1 = new Projectile(
@@ -486,7 +534,7 @@ public class main extends Application {
                         PlayerOne.second_AttackAmount--;
                     }
                     break;
-                case H://todo: Da steht frost-pillar Player1
+                case C://todo: Da steht frost-pillar Player1
                     if (PlayerOne.third_AttackAmount > 0) {
                         if (!PlayerTwo.jumping && (System.currentTimeMillis() >
                                 PlayerOne.third_Attack_LastUsed + PlayerOne.third_Attack_Cooldown)) {
@@ -500,7 +548,7 @@ public class main extends Application {
                         }
                     }
                     break;
-                case J://todo: Da steht enhanced-movement Player1
+                case F://todo: Da steht enhanced-movement Player1
                     if (PlayerOne.fourth_AttackAmount > 0) {
                         PlayerOne.fourth_Attack_LastUsed = System.currentTimeMillis();
                         if (PlayerOne.first_AttackAmount < PlayerOne.first_AttackMaxAmount) {
@@ -514,6 +562,43 @@ public class main extends Application {
                         }
                         PlayerOne.enhancedModeActive = true;
                         PlayerOne.fourth_AttackAmount--;
+                    }
+                    break;
+                default:
+                    if(PlayerOne.direction) {
+                        if (go) {
+                            PlayerOne.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                            go = false;
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_standing_reversed.png"));
+                            go = true;
+                        }
+                    } else {
+                        if (go) {
+                            PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
+                            go = false;
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_standing.png"));
+                            go = true;
+                        }
+                    }
+
+                    if(PlayerTwo.direction) {
+                        if (go1) {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                            go1 = false;
+                        } else {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_standing_reversed.png"));
+                            go1 = true;
+                        }
+                    } else {
+                        if (go1) {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_normal.png"));
+                            go1 = false;
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_standing.png"));
+                            go1 = true;
+                        }
                     }
                     break;
             }
