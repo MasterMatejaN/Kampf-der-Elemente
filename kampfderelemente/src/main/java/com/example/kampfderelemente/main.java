@@ -41,22 +41,17 @@ public class main extends Application {
     static int groundY = (height / 16) * 5;
     public static CharacterPlayable PlayerOne = new CharacterPlayable(
             100, 250, 500, 300, (int) (width / 10), groundY, 5, 250, false, 5,
-            3, 3, 1, 1
+            2, 2, 1, 1
     );
     public static CharacterPlayable PlayerTwo = new CharacterPlayable(
             100, 250, 500, 300, (int) (width / 10) * 7, groundY, 5, 250, true, 5,
-            3, 3, 1, 1
+            2, 2, 1, 1
     );
 
     private long lastinputPlayerOne = 0;
     private boolean PlayerOneStand = false;
 
-
-    //todo: für frost pillar; die gehören auch weg (zu CharacterPlayable auslagern);
-    private long Player1_3rd_move_frozen_effekt_time = 0;
-    private long Player2_3rd_move_frozen_effekt_time = 0;
-    private long Player1_3rd_move_cooled_effekt_time = 0;
-    private long Player2_3rd_move_cooled_effekt_time = 0;
+    public static Set<KeyCode> isPressed = new HashSet<>();
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -76,7 +71,6 @@ public class main extends Application {
         ground.setFitWidth(width);
         ground.setFitHeight(height / 6);
 
-        Set<KeyCode> isPressed = new HashSet<>();
         fight.setOnKeyReleased(e -> {
             boolean containedS = false;
             boolean containedDown = false;
@@ -87,21 +81,19 @@ public class main extends Application {
                 containedDown = true;
             }
             isPressed.remove(e.getCode());
-            if (!isPressed.contains(KeyCode.S) && containedS) {
+            if (!isPressed.contains(KeyCode.S) && containedS && !PlayerOne.frozen) {
                 PlayerOne.isSneaking = false;
                 PlayerOne.y = PlayerOne.yStand;
                 PlayerOne.setLayoutY(PlayerOne.y);
                 PlayerOne.height = PlayerOne.heightStand;
                 PlayerOne.setFitHeight(PlayerOne.height);
-                //todo stop sneak Player1
             }
-            if (!isPressed.contains(KeyCode.DOWN) && containedDown) {
+            if (!isPressed.contains(KeyCode.DOWN) && containedDown && !PlayerTwo.frozen) {
                 PlayerTwo.isSneaking = false;
                 PlayerTwo.y = PlayerTwo.yStand;
                 PlayerTwo.setLayoutY(PlayerTwo.y);
                 PlayerTwo.height = PlayerTwo.heightStand;
                 PlayerTwo.setFitHeight(PlayerTwo.height);
-                //todo stop sneak Player2
             }
             System.out.println(isPressed);
         });
@@ -174,45 +166,14 @@ public class main extends Application {
     }
 
     private void handleIsPressed(Set<KeyCode> isPressed) {
-        if (System.currentTimeMillis() > Player1_3rd_move_frozen_effekt_time
-                && Player1_3rd_move_frozen_effekt_time != 0
-        ) {
-            PlayerOne.frozen = false;
-            PlayerOne.cooled = true;
-            PlayerOne.speed -= 2;//todo 2 mit gescheiter variable tauschen
-            Player1_3rd_move_frozen_effekt_time = 0;
-            Player1_3rd_move_cooled_effekt_time = System.currentTimeMillis() + 2000;
-        }
-        if (System.currentTimeMillis() > Player1_3rd_move_cooled_effekt_time
-                && Player1_3rd_move_cooled_effekt_time != 0
-        ) {
-            PlayerOne.cooled = false;
-            PlayerOne.speed += 2;//todo 2 mit gescheiter variable tauschen
-            Player1_3rd_move_cooled_effekt_time = 0;
-        }
-        if (System.currentTimeMillis() > Player2_3rd_move_frozen_effekt_time
-                && Player2_3rd_move_frozen_effekt_time != 0
-        ) {
-            PlayerTwo.frozen = false;
-            PlayerTwo.cooled = true;
-            PlayerTwo.speed -= 2;//todo 2 mit gescheiter variable tauschen
-            Player2_3rd_move_frozen_effekt_time = 0;
-            Player2_3rd_move_cooled_effekt_time = System.currentTimeMillis() + 2000;
-        }
-        if (System.currentTimeMillis() > Player2_3rd_move_cooled_effekt_time
-                && Player2_3rd_move_cooled_effekt_time != 0
-        ) {
-            PlayerTwo.cooled = false;
-            PlayerTwo.speed += 2;//todo 2 mit gescheiter variable tauschen
-            Player2_3rd_move_cooled_effekt_time = 0;
-        }//TODO Whatwiththis
         for (KeyCode k : isPressed) {
             switch (k) {
                 case A:
-                    PlayerOne.setLayoutX(PlayerOne.getLayoutX() - PlayerOne.speed);
-                    PlayerOne.x = (int) PlayerOne.getLayoutX();
-                    PlayerOne.direction = true;
-                    PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
+                    if (!PlayerOne.frozen) {
+                        PlayerOne.setLayoutX(PlayerOne.getLayoutX() - PlayerOne.speed);
+                        PlayerOne.x = (int) PlayerOne.getLayoutX();
+                        PlayerOne.direction = true;
+                        PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
                     /* Animation Idea for Walking
                     final KeyCode kcopy = k;
                     Thread t = new Thread(() -> {
@@ -239,61 +200,72 @@ public class main extends Application {
                     });
                     t.start();/**/
 
-                    lastinputPlayerOne = System.nanoTime();
+                        lastinputPlayerOne = System.nanoTime();
+                    }
                     break;
                 case W:
-                    lastinputPlayerOne = System.nanoTime();
-                    if (PlayerOne.y == groundY) {
-                        PlayerOne.jump();
+                    if (!PlayerOne.frozen) {
+                        lastinputPlayerOne = System.nanoTime();
+                        if (PlayerOne.y == groundY) {
+                            PlayerOne.jump();
+                        }
                     }
                     break;
                 case S:
-                    lastinputPlayerOne = System.nanoTime();
-                    PlayerOne.isSneaking = true;
-                    PlayerOne.y = PlayerOne.ySneaking;
-                    PlayerOne.setLayoutY(PlayerOne.y);
-                    PlayerOne.height = PlayerOne.heightSneaking;
-                    PlayerOne.setFitHeight(PlayerOne.height);
-                    //todo: sneak Frame!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    // direction mitbedenken ==> direction "false" => rechts | "true" == links
+                    if (!PlayerOne.frozen) {
+                        lastinputPlayerOne = System.nanoTime();
+                        PlayerOne.isSneaking = true;
+                        PlayerOne.y = PlayerOne.ySneaking;
+                        PlayerOne.setLayoutY(PlayerOne.y);
+                        PlayerOne.height = PlayerOne.heightSneaking;
+                        PlayerOne.setFitHeight(PlayerOne.height);
+                    }
                     break;
                 case D:
-                    PlayerOne.setLayoutX(PlayerOne.getLayoutX() + PlayerOne.speed);
-                    PlayerOne.x = (int) PlayerOne.getLayoutX();
-                    PlayerOne.direction = false;
-                    PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
-                    lastinputPlayerOne = System.currentTimeMillis();
+                    if (!PlayerOne.frozen) {
+                        PlayerOne.setLayoutX(PlayerOne.getLayoutX() + PlayerOne.speed);
+                        PlayerOne.x = (int) PlayerOne.getLayoutX();
+                        PlayerOne.direction = false;
+                        PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
+                        lastinputPlayerOne = System.currentTimeMillis();
+                    }
                     break;
                 case UP:
-                    if (PlayerTwo.y == groundY) {
-                        PlayerTwo.jump();
+                    if (!PlayerTwo.frozen) {
+                        if (PlayerTwo.y == groundY) {
+                            PlayerTwo.jump();
+                        }
                     }
                     break;
                 case DOWN:
-                    PlayerTwo.isSneaking = true;
-                    //todo delete isSneaking (vllt doch nicht, wenn beim sneaken "gehen" animiert wird...)
-                    // während jump kein sneak, ist das ok?
-                    PlayerTwo.y = PlayerTwo.ySneaking;
-                    PlayerTwo.setLayoutY(PlayerTwo.y);
-                    PlayerTwo.height = PlayerTwo.heightSneaking;
-                    PlayerTwo.setFitHeight(PlayerTwo.height);
-                    //todo: sneak Frame!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    // direction mitbedenken ==> direction "false" => rechts | "true" == links
+                    if (!PlayerTwo.frozen) {
+                        PlayerTwo.isSneaking = true;
+                        //todo delete isSneaking (vllt doch nicht, wenn beim sneaken "gehen" animiert wird...)
+                        // während jump kein sneak, ist das ok?
+                        PlayerTwo.y = PlayerTwo.ySneaking;
+                        PlayerTwo.setLayoutY(PlayerTwo.y);
+                        PlayerTwo.height = PlayerTwo.heightSneaking;
+                        PlayerTwo.setFitHeight(PlayerTwo.height);
+                    }
                     break;
                 case LEFT:
-                    PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - PlayerTwo.speed);
-                    PlayerTwo.x = (int) PlayerTwo.getLayoutX();
-                    PlayerTwo.direction = true;
-                    PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                    if (!PlayerTwo.frozen) {
+                        PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - PlayerTwo.speed);
+                        PlayerTwo.x = (int) PlayerTwo.getLayoutX();
+                        PlayerTwo.direction = true;
+                        PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                    }
                     break;
                 case RIGHT:
-                    PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + PlayerTwo.speed);
-                    PlayerTwo.x = (int) PlayerTwo.getLayoutX();
-                    PlayerTwo.direction = false;
-                    PlayerTwo.setImage(new Image("file:images/waterbender_normal.png"));
+                    if (!PlayerTwo.frozen) {
+                        PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + PlayerTwo.speed);
+                        PlayerTwo.x = (int) PlayerTwo.getLayoutX();
+                        PlayerTwo.direction = false;
+                        PlayerTwo.setImage(new Image("file:images/waterbender_normal.png"));
+                    }
                     break;
-                case Y: //todo: Da steht Basic Punch von Player1
-                    if (((PlayerOne.direction
+                case Y: //todo: Da steht Basic Punch Player1
+                    if (((PlayerOne.direction && !PlayerTwo.frozen
                             && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerOne.basic_Attack_Range
                             && PlayerTwo.x < PlayerOne.x)
                     ) || ((!PlayerOne.direction) && (PlayerTwo.x < PlayerOne.x + PlayerOne.basic_Attack_Range
@@ -307,7 +279,7 @@ public class main extends Application {
                         updateCharacterHealth();
                     }
                     break;
-                case M://todo: Da steht Basic Punch von Player2
+                case M://todo: Da steht Basic Punch Player2
                     if (((PlayerTwo.direction
                             && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.basic_Attack_Range
                             && PlayerOne.x < PlayerTwo.x)
@@ -322,7 +294,7 @@ public class main extends Application {
                         updateCharacterHealth();
                     }
                     break;
-                case X://todo: Da steht Basic Projectile von Player1
+                case X://todo: Da steht Basic Projectile Player1
                     if (System.currentTimeMillis() >
                             PlayerOne.basic_Projektile_LastUsed + PlayerOne.basic_Projektile_Cooldown
                     ) {
@@ -335,7 +307,7 @@ public class main extends Application {
                         everything.getChildren().add(projectilePlayer1);
                     }
                     break;
-                case N://todo: Da steht Basic Projectile von Player2
+                case N://todo: Da steht Basic Projectile Player2
                     if (System.currentTimeMillis() >
                             PlayerTwo.basic_Projektile_LastUsed + PlayerTwo.basic_Projektile_Cooldown
                     ) {
@@ -348,7 +320,7 @@ public class main extends Application {
                         everything.getChildren().add(projectilePlayer2);
                     }
                     break;
-                case DIGIT1://todo: Da steht water whip von Player2
+                case DIGIT1://todo: Da steht water-whip Player2
                     if (PlayerTwo.second_AttackAmount > 0) {
                         if ((PlayerTwo.direction
                                 && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.first_Attack_Range
@@ -384,7 +356,7 @@ public class main extends Application {
                         PlayerTwo.first_AttackAmount--;
                     }
                     break;
-                case NUMPAD2://todo: Da steht ice spike von Player2
+                case NUMPAD2://todo: Da steht ice-spike Player2
                     if (PlayerTwo.second_AttackAmount > 0) {
                         boolean projectileDirection;
                         Projectile projectilePlayer2 = new Projectile(
@@ -406,12 +378,37 @@ public class main extends Application {
                         PlayerTwo.second_AttackAmount--;
                     }
                     break;
-                case NUMPAD3:
-                    //Player1_3rd_move_frozen_effekt_time = PlayerTwo.frostPillar(PlayerOne);
+                case NUMPAD3://todo: Da steht frost-pillar Player2
+                    if (PlayerTwo.third_AttackAmount > 0) {
+                        if (!PlayerOne.jumping && (System.currentTimeMillis() >
+                                PlayerTwo.third_Attack_LastUsed + PlayerTwo.third_Attack_Cooldown)) {
+                            FrostPillar frostPillar = new FrostPillar(PlayerOne.x, PlayerOne.y, PlayerOne.width,
+                                    PlayerOne.height, System.currentTimeMillis(), PlayerTwo, PlayerOne,
+                                    false
+                            );
+                            everything.getChildren().add(frostPillar);
+                            PlayerTwo.third_Attack_LastUsed = System.currentTimeMillis();
+                            PlayerTwo.third_AttackAmount--;
+                        }
+                    }
                     break;
-                case NUMPAD4:
+                case NUMPAD4://todo: Da steht enhanced-movement Player2
+                    if (PlayerTwo.fourth_AttackAmount > 0) {
+                        PlayerTwo.fourth_Attack_LastUsed = System.currentTimeMillis();
+                        if (PlayerTwo.first_AttackAmount < PlayerTwo.first_AttackMaxAmount) {
+                            PlayerTwo.first_AttackAmount++;
+                        }
+                        if (PlayerTwo.second_AttackAmount < PlayerTwo.second_AttackMaxAmount) {
+                            PlayerTwo.second_AttackAmount++;
+                        }
+                        if (PlayerTwo.third_AttackAmount < PlayerTwo.third_AttackMaxAmount) {
+                            PlayerTwo.third_AttackAmount++;
+                        }
+                        PlayerTwo.enhancedModeActive = true;
+                        PlayerTwo.fourth_AttackAmount--;
+                    }
                     break;
-                case F://todo: Da steht water whip von Player1
+                case F://todo: Da steht water-whip Player1
                     if (PlayerOne.second_AttackAmount > 0) {
                         if ((PlayerOne.direction
                                 && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerTwo.first_Attack_Range
@@ -449,7 +446,7 @@ public class main extends Application {
                         PlayerOne.first_AttackAmount--;
                     }
                     break;
-                case G:
+                case G://todo: Da steht ice-spike Player1
                     if (PlayerOne.second_AttackAmount > 0) {
                         boolean projectileDirection;
                         Projectile projectilePlayer1 = new Projectile(
@@ -471,11 +468,36 @@ public class main extends Application {
                         PlayerOne.second_AttackAmount--;
                     }
                     break;
-                case H:
-                    //Player1_3rd_move_frozen_effekt_time = PlayerTwo.frostPillar(PlayerOne);
+                case H://todo: Da steht frost-pillar Player1
+                    if (PlayerOne.third_AttackAmount > 0) {
+                        if (!PlayerTwo.jumping && (System.currentTimeMillis() >
+                                PlayerOne.third_Attack_LastUsed + PlayerOne.third_Attack_Cooldown)) {
+                            FrostPillar frostPillar = new FrostPillar(PlayerTwo.x, PlayerTwo.y, PlayerTwo.width,
+                                    PlayerTwo.height, System.currentTimeMillis(), PlayerOne, PlayerTwo,
+                                    true
+                            );
+                            everything.getChildren().add(frostPillar);
+                            PlayerOne.third_Attack_LastUsed = System.currentTimeMillis();
+                            PlayerOne.third_AttackAmount--;
+                        }
+                    }
                     break;
-                case J:
-                    break;/**/
+                case J://todo: Da steht enhanced-movement Player1
+                    if (PlayerOne.fourth_AttackAmount > 0) {
+                        PlayerOne.fourth_Attack_LastUsed = System.currentTimeMillis();
+                        if (PlayerOne.first_AttackAmount < PlayerOne.first_AttackMaxAmount) {
+                            PlayerOne.first_AttackAmount++;
+                        }
+                        if (PlayerOne.second_AttackAmount < PlayerOne.second_AttackMaxAmount) {
+                            PlayerOne.second_AttackAmount++;
+                        }
+                        if (PlayerOne.third_AttackAmount < PlayerOne.third_AttackMaxAmount) {
+                            PlayerOne.third_AttackAmount++;
+                        }
+                        PlayerOne.enhancedModeActive = true;
+                        PlayerOne.fourth_AttackAmount--;
+                    }
+                    break;
             }
         }
     }

@@ -3,7 +3,7 @@ package com.example.kampfderelemente;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.ImageView;
 
-import static com.example.kampfderelemente.main.updateCharacterHealth;
+import static com.example.kampfderelemente.main.*;
 
 public class Projectile extends ImageView {
     int height;
@@ -72,6 +72,7 @@ public class Projectile extends ImageView {
                                     (x < main.PlayerTwo.x + main.PlayerTwo.width && x > main.PlayerTwo.x)
                     ) &&
                             (((y + height > main.PlayerTwo.y) && y < main.PlayerTwo.y + main.PlayerTwo.height))
+                            && !PlayerTwo.isSneaking
                     ) {
                         //todo collision, give damage to player 2
                         if (!isIceSpike) {
@@ -97,6 +98,7 @@ public class Projectile extends ImageView {
                                     (x < main.PlayerTwo.x + main.PlayerTwo.width && x > main.PlayerTwo.x)
                     ) &&
                             (((y + height > main.PlayerTwo.y) && y < main.PlayerTwo.y + main.PlayerTwo.height))
+                            && !PlayerTwo.isSneaking
                     ) {
                         //todo collision, give damage to player 2
                         System.out.println(
@@ -138,8 +140,8 @@ public class Projectile extends ImageView {
                                     ||
                                     (x < main.PlayerOne.x + main.PlayerOne.width && x > main.PlayerOne.x)
                     ) &&
-                            (((y + height > main.PlayerOne.y) && y < main.PlayerOne.y + main.PlayerOne.height)
-                            )
+                            (((y + height > main.PlayerOne.y) && y < main.PlayerOne.y + main.PlayerOne.height))
+                            && !PlayerOne.isSneaking
                     ) {
                         //todo collision, give damage to player 2
                         if (!isIceSpike) {
@@ -167,17 +169,23 @@ public class Projectile extends ImageView {
                             (((y + height > main.PlayerOne.y) && y < main.PlayerOne.y + main.PlayerOne.height))
                     ) {
                         //todo collision, give damage to player 2
-                        if (!isIceSpike) {
-                            main.PlayerOne.health = main.PlayerOne.health - damage;
-                        } else {
-                            System.out.println("Bleeding started");
-                            main.PlayerOne.bleeding = true;
-                            main.PlayerOne.bleedingStart = System.currentTimeMillis();
-                            main.PlayerOne.health = main.PlayerOne.health - (damage / 5);
+                        if ((PlayerOne.isSneaking && PlayerTwo.isSneaking)
+                                || (!PlayerOne.isSneaking && !PlayerTwo.isSneaking)
+                        ) {
+                            if (!isIceSpike) {
+                                main.PlayerOne.health = main.PlayerOne.health - damage;
+                            } else {
+                                System.out.println("Bleeding started");
+                                main.PlayerOne.bleeding = true;
+                                main.PlayerOne.bleedingStart = System.currentTimeMillis();
+                                main.PlayerOne.health = main.PlayerOne.health - (damage / 5);
+                            }
+                            updateCharacterHealth();
+                            System.out.println("clear hit with my projectile-boi");
+                            stop();
+                        } else if (!PlayerOne.isSneaking) {
+
                         }
-                        updateCharacterHealth();
-                        System.out.println("clear hit with my projectile-boi");
-                        stop();
                     }
                 }
                 //start += 50;

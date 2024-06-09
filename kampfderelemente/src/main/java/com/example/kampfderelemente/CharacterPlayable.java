@@ -16,6 +16,7 @@ public class CharacterPlayable extends ImageView {
     // todo: (only Akinci delete me) | notiz: direction "false" => rechts | "true" == links
     boolean direction;
     int speed;
+    int speedUnchanged;
     int first_AttackAmount;
     int second_AttackAmount;
     int third_AttackAmount;
@@ -34,20 +35,12 @@ public class CharacterPlayable extends ImageView {
 
     int first_Attack_Reload = 2000;
     int second_Attack_Reload = 2000;
-    int third_Attack_Reload = 2000;
+    int third_Attack_Reload = 10000;
     int fourth_Attack_Reload = 2000;
 
-    long basic_Attack_Cooldown = 400;
-    long basic_Projektile_Cooldown = 3000;
-    long first_Attack_Cooldown = 100;
-    long second_Attack_Cooldown = 150;
-    long third_Attack_Cooldown = 2000;
 
     int basic_Attack_Range = 100;
     int first_Attack_Range = 250;
-    //beim jetzigen Stand des Spiels nicht benötigt, aber
-    // eventuell für die Zukunft relevant
-    long fourth_Attack_Cooldown = 100;
 
     boolean jumping = false;
     int heightDuringJump;
@@ -67,13 +60,21 @@ public class CharacterPlayable extends ImageView {
     long cooledStart;
     long frozenStart;
     int bleedingDuration = 5000;
-    int cooledDuration = 3000;
-    int frozenDuration = 1000;
+    int cooledDuration = 2000;
+    int frozenDuration = 1200;
     long timerCheckTime;
+    boolean enhancedModeActive = false;
+    int enhancedModeDuration = 3000;
 
-    public CharacterPlayable(int health, int width, int height, int heightSneaking, int x, int y, int damage, int range, boolean direction,
-                             int speed, int first_AttackAmount, int second_AttackAmount, int third_AttackAmount,
-                             int fourth_AttackAmount
+    long basic_Attack_Cooldown = 400;
+    long basic_Projektile_Cooldown = 3000;
+    long first_Attack_Cooldown = 100;
+    long second_Attack_Cooldown = 150;
+    long third_Attack_Cooldown = (long) ((cooledDuration + frozenDuration) * 1.15);
+    long fourth_Attack_Cooldown = 100;
+    public CharacterPlayable(int health, int width, int height, int heightSneaking, int x, int y, int damage,
+                             int range, boolean direction, int speed, int first_AttackAmount,
+                             int second_AttackAmount, int third_AttackAmount, int fourth_AttackAmount
     ) {
         this.health = health;
         this.width = width;
@@ -85,6 +86,7 @@ public class CharacterPlayable extends ImageView {
         this.range = range;
         this.direction = direction;
         this.speed = speed;
+        speedUnchanged = speed;
         this.first_AttackAmount = first_AttackAmount;
         this.second_AttackAmount = second_AttackAmount;
         this.third_AttackAmount = third_AttackAmount;
@@ -108,6 +110,7 @@ public class CharacterPlayable extends ImageView {
             @Override
             public void handle(long l) {
                 if (timerCheckTime + 1000 < System.currentTimeMillis()) {
+                    //reload attacks
                     if (first_Attack_LastUsed + first_Attack_Reload < System.currentTimeMillis() &&
                             first_AttackAmount < first_AttackMaxAmount) {
                         first_AttackAmount++;
@@ -116,6 +119,16 @@ public class CharacterPlayable extends ImageView {
                             second_AttackAmount < second_AttackMaxAmount) {
                         second_AttackAmount++;
                     }
+                    if (third_Attack_LastUsed + third_Attack_Reload < System.currentTimeMillis() &&
+                            third_AttackAmount < third_AttackMaxAmount) {
+                        third_AttackAmount++;
+                    }
+                    if (fourth_Attack_LastUsed + fourth_Attack_Reload < System.currentTimeMillis() &&
+                            fourth_AttackAmount < fourth_AttackMaxAmount) {
+                        fourth_AttackAmount++;
+                    }
+
+                    //bleeding status effect
                     if (bleeding && bleedingStart + bleedingDuration > System.currentTimeMillis()) {
                         health -= (damage / 5) * 2;
                         updateCharacterHealth();
@@ -125,6 +138,13 @@ public class CharacterPlayable extends ImageView {
                         bleedingStart = 0;
                         bleeding = false;
                         //System.out.println("no Bleeding");
+                    }
+                    if (enhancedModeActive) {
+                        speed *= 1.5;
+                    }
+                    if (System.currentTimeMillis() > fourth_Attack_LastUsed + enhancedModeDuration){
+                        enhancedModeActive = false;
+                        speed = speedUnchanged;
                     }
                     timerCheckTime += 1000;
                 }
@@ -155,63 +175,4 @@ public class CharacterPlayable extends ImageView {
             y+=5;
         }/**/
     }
-
-//geht nicht
-/*    public void waterWhip(CharacterPlayable other) {
-        if (first_AttackAmount > 0) {
-            if ((this.direction &&
-                    (other.x + other.width > this.x - 250 && other.x < this.x))) {
-                other.health = (other.health -
-                        (this.damage + (this.x - other.x))
-                );
-                System.out.println("damage: " +
-                        (this.damage + (this.x - other.x))
-                );
-                System.out.println(other.health);
-                updateCharacterHealth();
-            }
-            if (((!this.direction) && (other.x < this.x + 250 && other.x > this.x))) {
-                other.health = (other.health -
-                        (this.damage + (other.x - this.x))
-                );
-                System.out.println("damage: " +
-                        (this.damage + (other.x - this.x))
-                );
-                System.out.println(other.health);
-                updateCharacterHealth();
-            }
-            first_AttackAmount--;
-        }
-    }/**/
-/*
-    public void iceSpikes(CharacterPlayable other) {
-        if (second_AttackAmount > 0) {
-            other.bleeding = true;
-            second_AttackAmount--;
-            second_Attack_LastUsed = System.currentTimeMillis();
-        }
-    }
-
-    public long frostPillar(CharacterPlayable other) {
-        if (third_AttackAmount > 0) {
-            other.health = other.health - ((int) (damage / 5));
-            other.frozen = true;
-            third_AttackAmount--;
-            third_Attack_LastUsed = System.currentTimeMillis();
-        return System.currentTimeMillis() + 2030;
-        }
-        return 0;
-    }
-
-    public void EnhancedMovementMode() {
-        if (fourth_AttackAmount > 0) {
-            if (third_AttackAmount < 1) third_AttackAmount += 1;
-            if (second_AttackAmount < 3) second_AttackAmount += 1;
-            if (first_AttackAmount < 3) first_AttackAmount += 1;
-            fourth_AttackAmount--;
-            fourth_Attack_LastUsed = System.currentTimeMillis();
-            this.speed += 5;
-            this.speed -= 5;
-        }
-    }/**/
 }
