@@ -332,9 +332,9 @@ public class main extends Application {
                     break;
                 case Q: //todo: Da steht Basic Punch Player1
                     if (((PlayerOne.direction && !PlayerTwo.frozen
-                            && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerOne.basic_Attack_Range
+                            && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerOne.basic_Attack_Range_Left
                             && PlayerTwo.x < PlayerOne.x)
-                    ) || ((!PlayerOne.direction) && (PlayerTwo.x < PlayerOne.x + PlayerOne.basic_Attack_Range
+                    ) || ((!PlayerOne.direction) && (PlayerTwo.x < PlayerOne.x + PlayerOne.basic_Attack_Range_Right
                             && PlayerTwo.x > PlayerOne.x)))
                             && (System.currentTimeMillis() >
                             PlayerOne.basic_Attack_LastUsed + PlayerOne.basic_Attack_Cooldown)
@@ -347,9 +347,9 @@ public class main extends Application {
                     break;
                 case U://todo: Da steht Basic Punch Player2
                     if (((PlayerTwo.direction
-                            && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.basic_Attack_Range
+                            && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.basic_Attack_Range_Left
                             && PlayerOne.x < PlayerTwo.x)
-                    ) || ((!PlayerTwo.direction) && (PlayerOne.x < PlayerTwo.x + PlayerTwo.basic_Attack_Range
+                    ) || ((!PlayerTwo.direction) && (PlayerOne.x < PlayerTwo.x + PlayerTwo.basic_Attack_Range_Right
                             && PlayerOne.x > PlayerTwo.x)))
                             && (System.currentTimeMillis() >
                             PlayerTwo.basic_Attack_LastUsed + PlayerTwo.basic_Attack_Cooldown)

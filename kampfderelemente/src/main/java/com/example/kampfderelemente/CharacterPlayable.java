@@ -40,7 +40,8 @@ public class CharacterPlayable extends ImageView {
     int fourth_Attack_Reload = 2000;
 
 
-    int basic_Attack_Range = 100;
+    int basic_Attack_Range_Left = 100;
+    int basic_Attack_Range_Right = 100 + width;
     int first_Attack_Range = 250;
 
     boolean jumping = false;
@@ -73,10 +74,18 @@ public class CharacterPlayable extends ImageView {
     long second_Attack_Cooldown = 150;
     long third_Attack_Cooldown = (long) ((cooledDuration + frozenDuration) * 1.15);
     long fourth_Attack_Cooldown = 100;
+    ImageView waterWhip = new ImageView(new Image("file:images/water_whip.png"));
+    int waterWhipHeight = 40;
+    int waterWhipX;
+    int waterWhipY = y + height / 2;
+
     public CharacterPlayable(int health, int width, int height, int heightSneaking, int x, int y, int damage,
                              int range, boolean direction, int speed, int first_AttackAmount,
                              int second_AttackAmount, int third_AttackAmount, int fourth_AttackAmount
     ) {
+        waterWhip.setFitHeight(waterWhipHeight);
+        waterWhip.setFitWidth(first_Attack_Range);
+        waterWhip.setLayoutY(waterWhipY);
         this.health = health;
         this.width = width;
         this.height = height;
