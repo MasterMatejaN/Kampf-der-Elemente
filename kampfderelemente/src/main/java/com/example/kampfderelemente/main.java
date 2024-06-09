@@ -296,6 +296,11 @@ public class main extends Application {
                             && (System.currentTimeMillis() >
                             PlayerOne.basic_Attack_LastUsed + PlayerOne.basic_Attack_Cooldown)
                     ) {
+                        if(PlayerOne.direction){
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         PlayerOne.basic_Attack_LastUsed = System.currentTimeMillis();
                         PlayerTwo.health = (PlayerTwo.health - PlayerOne.damage);
                         System.out.println(PlayerTwo.health);
@@ -311,6 +316,11 @@ public class main extends Application {
                             && (System.currentTimeMillis() >
                             PlayerTwo.basic_Attack_LastUsed + PlayerTwo.basic_Attack_Cooldown)
                     ) {
+                        if(PlayerTwo.direction){
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         PlayerTwo.basic_Attack_LastUsed = System.currentTimeMillis();
                         PlayerOne.health = (PlayerOne.health - PlayerTwo.damage);
                         System.out.println(PlayerOne.health);
@@ -321,6 +331,11 @@ public class main extends Application {
                     if (System.currentTimeMillis() >
                             PlayerOne.basic_Projektile_LastUsed + PlayerOne.basic_Projektile_Cooldown
                     ) {
+                        if(PlayerOne.direction){
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         PlayerOne.basic_Projektile_LastUsed = System.currentTimeMillis();
                         Projectile projectilePlayer1 = new Projectile(
                                 150, 150, PlayerOne.x, PlayerOne.y + PlayerOne.height / 2, 20, 5,
@@ -334,6 +349,11 @@ public class main extends Application {
                     if (System.currentTimeMillis() >
                             PlayerTwo.basic_Projektile_LastUsed + PlayerTwo.basic_Projektile_Cooldown
                     ) {
+                        if(PlayerTwo.direction){
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         PlayerTwo.basic_Projektile_LastUsed = System.currentTimeMillis();
                         Projectile projectilePlayer2 = new Projectile(
                                 150, 150, PlayerTwo.x, PlayerTwo.y + PlayerTwo.height / 2, 20, 5,
@@ -345,6 +365,11 @@ public class main extends Application {
                     break;
                 case P://todo: Da steht water-whip Player2
                     if (PlayerTwo.second_AttackAmount > 0) {
+                        if(PlayerTwo.direction){
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         if ((PlayerTwo.direction
                                 && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.first_Attack_Range
                                 && PlayerOne.x < PlayerTwo.x))
@@ -381,6 +406,11 @@ public class main extends Application {
                     break;
                 case H://todo: Da steht ice-spike Player2
                     if (PlayerTwo.second_AttackAmount > 0) {
+                        if(PlayerTwo.direction){
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         boolean projectileDirection;
                         Projectile projectilePlayer2 = new Projectile(
                                 50, 150, PlayerTwo.x, PlayerTwo.y + PlayerTwo.height / 2, 20, 5,
@@ -403,6 +433,11 @@ public class main extends Application {
                     break;
                 case N://todo: Da steht frost-pillar Player2
                     if (PlayerTwo.third_AttackAmount > 0) {
+                        if(PlayerTwo.direction){
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         if (!PlayerOne.jumping && (System.currentTimeMillis() >
                                 PlayerTwo.third_Attack_LastUsed + PlayerTwo.third_Attack_Cooldown)) {
                             FrostPillar frostPillar = new FrostPillar(PlayerOne.x, PlayerOne.y, PlayerOne.width,
@@ -417,6 +452,11 @@ public class main extends Application {
                     break;
                 case M://todo: Da steht enhanced-movement Player2
                     if (PlayerTwo.fourth_AttackAmount > 0) {
+                        if(PlayerTwo.direction){
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerTwo.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         PlayerTwo.fourth_Attack_LastUsed = System.currentTimeMillis();
                         if (PlayerTwo.first_AttackAmount < PlayerTwo.first_AttackMaxAmount) {
                             PlayerTwo.first_AttackAmount++;
@@ -433,6 +473,11 @@ public class main extends Application {
                     break;
                 case R://todo: Da steht water-whip Player1
                     if (PlayerOne.second_AttackAmount > 0) {
+                        if(PlayerOne.direction){
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         if ((PlayerOne.direction
                                 && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerOne.first_Attack_Range
                                 && PlayerTwo.x < PlayerOne.x)
@@ -471,6 +516,11 @@ public class main extends Application {
                     break;
                 case X://todo: Da steht ice-spike Player1
                     if (PlayerOne.second_AttackAmount > 0) {
+                        if(PlayerOne.direction){
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         boolean projectileDirection;
                         Projectile projectilePlayer1 = new Projectile(
                                 50, 150, PlayerOne.x, PlayerOne.y + PlayerOne.height / 2, 20, 5,
@@ -493,6 +543,11 @@ public class main extends Application {
                     break;
                 case C://todo: Da steht frost-pillar Player1
                     if (PlayerOne.third_AttackAmount > 0) {
+                        if(PlayerOne.direction){
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         if (!PlayerTwo.jumping && (System.currentTimeMillis() >
                                 PlayerOne.third_Attack_LastUsed + PlayerOne.third_Attack_Cooldown)) {
                             FrostPillar frostPillar = new FrostPillar(PlayerTwo.x, PlayerTwo.y, PlayerTwo.width,
@@ -507,6 +562,11 @@ public class main extends Application {
                     break;
                 case F://todo: Da steht enhanced-movement Player1
                     if (PlayerOne.fourth_AttackAmount > 0) {
+                        if(PlayerOne.direction){
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                        } else {
+                            PlayerOne.setImage(new Image("file:images/waterbender_punch.png"));
+                        }
                         PlayerOne.fourth_Attack_LastUsed = System.currentTimeMillis();
                         if (PlayerOne.first_AttackAmount < PlayerOne.first_AttackMaxAmount) {
                             PlayerOne.first_AttackAmount++;
