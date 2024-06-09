@@ -1,6 +1,7 @@
 package com.example.kampfderelemente;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import static com.example.kampfderelemente.main.*;
@@ -103,6 +104,29 @@ public class CharacterPlayable extends ImageView {
         this.setFitWidth(width);
         this.setFitHeight(height);
         timer();
+    }
+
+    public void moveleft() {
+        AnimationTimer walkingleft = new AnimationTimer() {
+            long time;
+            @Override
+            public void handle(long l) {
+                if(time + 500 < System.currentTimeMillis()) {
+                    PlayerOne.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                    go = false;
+                } else {
+                    PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
+                    go = true;
+                }
+            }
+
+            @Override
+            public void start() {
+                time = System.currentTimeMillis();
+                super.start();
+            }
+        };
+        walkingleft.start();
     }
 
     public void timer() {

@@ -1,5 +1,6 @@
 package com.example.kampfderelemente;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -52,6 +53,7 @@ public class main extends Application {
     private boolean PlayerOneStand = false;
 
     public static Set<KeyCode> isPressed = new HashSet<>();
+    public static boolean go = false;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -109,6 +111,56 @@ public class main extends Application {
                 Platform.runLater(() -> {
                     handleIsPressed(isPressed);
                 });
+            }
+        });
+        t.start();
+/*
+        Thread animation = new Thread(() -> {
+            while (true) {
+                for (KeyCode k : isPressed) {
+                    switch (k) {
+                        case D:
+                            try {
+                                Thread.sleep(50);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            if (go) {
+                                go = false;
+                                PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
+                            } else {
+                                go = true;
+                                PlayerOne.setImage(new Image("file:images/waterbender_walking.png"));
+                            }
+                        default:
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            System.out.println("hey");
+                            if (go) {
+                                go = false;
+                                PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
+                            } else {
+                                go = true;
+                                PlayerOne.setImage(new Image("file:images/waterbender_standing.png"));
+                            }
+
+                    }
+                }
+            }
+        });
+        animation.start();*/
+
+        fight.setOnKeyPressed(e -> {
+            isPressed.add(e.getCode());
+            System.out.println(isPressed);
+
+        });
+
+
+
 /*  Animation Idea für Standing
                 if(lastinputPlayerOne + 5_000_000_000L <= System.nanoTime()) {
                     if (PlayerOne.direction) {
@@ -131,15 +183,6 @@ public class main extends Application {
                 }
 
  /**/
-            }
-        });
-        t.start();
-
-        fight.setOnKeyPressed(e -> {
-            isPressed.add(e.getCode());
-            System.out.println(isPressed);
-
-        });
 
 //        fight.setOnKeyPressed(new EventHandler<KeyEvent>() {
 //            @Override
@@ -173,32 +216,8 @@ public class main extends Application {
                         PlayerOne.setLayoutX(PlayerOne.getLayoutX() - PlayerOne.speed);
                         PlayerOne.x = (int) PlayerOne.getLayoutX();
                         PlayerOne.direction = true;
-                        PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
-                    /* Animation Idea for Walking
-                    final KeyCode kcopy = k;
-                    Thread t = new Thread(() -> {
-                        boolean PlayerOnewalk = false;
-                        while (kcopy == KeyCode.A) {
-                            try {
-                                Thread.sleep(200);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            if(PlayerOnewalk) {
-                                PlayerOne.setImage(new Image("file:images/waterbender_normal_reversed.png"));
-                                PlayerOnewalk = false;
-                            } else {
-                                PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
-                                PlayerOnewalk = true;
-                            }
-                        }
-                        try {
-                            this.stop();
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                    t.start();/**/
+                        //PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
+                        PlayerOne.moveleft();
 
                         lastinputPlayerOne = System.nanoTime();
                     }
@@ -226,7 +245,6 @@ public class main extends Application {
                         PlayerOne.setLayoutX(PlayerOne.getLayoutX() + PlayerOne.speed);
                         PlayerOne.x = (int) PlayerOne.getLayoutX();
                         PlayerOne.direction = false;
-                        PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
                         lastinputPlayerOne = System.currentTimeMillis();
                     }
                     break;

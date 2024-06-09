@@ -23,3 +23,29 @@ public class HelloApplication extends Application {
         launch();
     }
 }
+
+/* Animation Idea for Walking
+                    final KeyCode kcopy = k;
+                    Thread t = new Thread(() -> {
+                        boolean PlayerOnewalk = false;
+                        while (kcopy == KeyCode.A) {
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            if(PlayerOnewalk) {
+                                PlayerOne.setImage(new Image("file:images/waterbender_normal_reversed.png"));
+                                PlayerOnewalk = false;
+                            } else {
+                                PlayerOne.setImage(new Image("file:images/waterbender_walking_reversed.png"));
+                                PlayerOnewalk = true;
+                            }
+                        }
+                        try {
+                            this.stop();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                    t.start();/**/
