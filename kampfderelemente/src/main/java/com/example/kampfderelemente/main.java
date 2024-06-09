@@ -383,7 +383,7 @@ public class main extends Application {
                     if (PlayerTwo.second_AttackAmount > 0) {
                         boolean projectileDirection;
                         Projectile projectilePlayer2 = new Projectile(
-                                150, 150, PlayerTwo.x, PlayerTwo.y + PlayerTwo.height / 2, 20, 5,
+                                50, 150, PlayerTwo.x, PlayerTwo.y + PlayerTwo.height / 2, 20, 5,
                                 true, 2, projectileDirection = PlayerTwo.direction
                         );
                         int random = (int) ((Math.random() * 3) + 1);
@@ -473,7 +473,7 @@ public class main extends Application {
                     if (PlayerOne.second_AttackAmount > 0) {
                         boolean projectileDirection;
                         Projectile projectilePlayer1 = new Projectile(
-                                150, 150, PlayerOne.x, PlayerOne.y + PlayerOne.height / 2, 20, 5,
+                                50, 150, PlayerOne.x, PlayerOne.y + PlayerOne.height / 2, 20, 5,
                                 true, 1, projectileDirection = PlayerOne.direction
                         );
                         int random = (int) ((Math.random() * 3) + 1);
