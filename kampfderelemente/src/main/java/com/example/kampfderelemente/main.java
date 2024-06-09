@@ -153,49 +153,6 @@ public class main extends Application {
             System.out.println(isPressed);
         });
 
-
-
-/*  Animation Idea für Standing
-                if(lastinputPlayerOne + 5_000_000_000L <= System.nanoTime()) {
-                    if (PlayerOne.direction) {
-                        if(PlayerOneStand) {
-                            PlayerOne.setImage(new Image("file:images/waterbender_normal_reversed.png"));
-                            PlayerOneStand = false;
-                        } else {
-                            PlayerOne.setImage(new Image("file:images/waterbender_standing_reversed.png"));
-                            PlayerOneStand = true;
-                        }
-                    } else {
-                        if(PlayerOneStand) {
-                            PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
-                            PlayerOneStand = false;
-                        } else {
-                            PlayerOne.setImage(new Image("file:images/waterbender_standing.png"));
-                            PlayerOneStand = true;
-                        }
-                    }
-                }
-
- /**/
-
-//        fight.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//            @Override
-//            public void handle(KeyEvent event) {
-//                System.out.println(event.getCode());
-//                switch (event.getCode()) {
-//                    case I:
-//                        break;
-//                    case K:
-//                        break;
-//                    case J:
-//                        PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - 1);
-//                        break;
-//                    case L:
-//                        PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + 1);
-//                        break;
-//                }
-//            }
-//        });
         everything.getChildren().addAll(background, ground, PlayerOne, PlayerTwo);
         showabilities();
         stage.setScene(fight);
@@ -404,7 +361,7 @@ public class main extends Application {
                             updateCharacterHealth();
                         }
                         if (((!PlayerTwo.direction)
-                                && (PlayerOne.x < PlayerTwo.x + PlayerTwo.first_Attack_Range
+                                && (PlayerOne.x < PlayerTwo.x + PlayerTwo.first_Attack_Range + PlayerTwo.width
                                 && PlayerOne.x > PlayerTwo.x))
                                 && (System.currentTimeMillis() >
                                 PlayerTwo.first_Attack_LastUsed + PlayerTwo.first_Attack_Cooldown)
@@ -431,9 +388,9 @@ public class main extends Application {
                         );
                         int random = (int) ((Math.random() * 3) + 1);
                         if (projectileDirection) {// todo hier ice-spike bild mit reversed ersetzen
-                            if (random == 1) projectilePlayer2.setImage(new Image("file:images/ice_spike1.png"));
-                            else if (random == 2) projectilePlayer2.setImage(new Image("file:images/ice_spike2.png"));
-                            else projectilePlayer2.setImage(new Image("file:images/ice_spike3.png"));
+                            if (random == 1) projectilePlayer2.setImage(new Image("file:images/ice_spike1_reversed.png"));
+                            else if (random == 2) projectilePlayer2.setImage(new Image("file:images/ice_spike2_reversed.png"));
+                            else projectilePlayer2.setImage(new Image("file:images/ice_spike3_reversed.png"));
                         } else {
                             if (random == 1) projectilePlayer2.setImage(new Image("file:images/ice_spike1.png"));
                             else if (random == 2) projectilePlayer2.setImage(new Image("file:images/ice_spike2.png"));
@@ -477,7 +434,7 @@ public class main extends Application {
                 case R://todo: Da steht water-whip Player1
                     if (PlayerOne.second_AttackAmount > 0) {
                         if ((PlayerOne.direction
-                                && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerTwo.first_Attack_Range
+                                && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerOne.first_Attack_Range
                                 && PlayerTwo.x < PlayerOne.x)
                         )
                                 && (System.currentTimeMillis() >
@@ -493,7 +450,7 @@ public class main extends Application {
                             updateCharacterHealth();
                         }
                         if (((!PlayerOne.direction)
-                                && (PlayerTwo.x < PlayerOne.x + PlayerTwo.first_Attack_Range
+                                && (PlayerTwo.x < PlayerOne.x + PlayerOne.first_Attack_Range + PlayerTwo.width
                                 && PlayerTwo.x > PlayerOne.x)
                         )
                                 && (System.currentTimeMillis() >
@@ -521,9 +478,9 @@ public class main extends Application {
                         );
                         int random = (int) ((Math.random() * 3) + 1);
                         if (projectileDirection) {// todo hier ice-spike bild mit reversed ersetzen
-                            if (random == 1) projectilePlayer1.setImage(new Image("file:images/ice_spike1.png"));
-                            else if (random == 2) projectilePlayer1.setImage(new Image("file:images/ice_spike2.png"));
-                            else projectilePlayer1.setImage(new Image("file:images/ice_spike3.png"));
+                            if (random == 1) projectilePlayer1.setImage(new Image("file:images/ice_spike1_reversed.png"));
+                            else if (random == 2) projectilePlayer1.setImage(new Image("file:images/ice_spike2_reversed.png"));
+                            else projectilePlayer1.setImage(new Image("file:images/ice_spike3_reversed.png"));
                         } else {
                             if (random == 1) projectilePlayer1.setImage(new Image("file:images/ice_spike1.png"));
                             else if (random == 2) projectilePlayer1.setImage(new Image("file:images/ice_spike2.png"));
