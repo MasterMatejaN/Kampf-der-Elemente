@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
 import static com.example.kampfderelemente.main.*;
+import static com.example.kampfderelemente.main.isPressed;
 
 public class FrostPillar extends ImageView {
     int x;

@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import static com.example.kampfderelemente.main.*;
-import static com.example.kampfderelemente.main.matchEnded;
+import static com.example.kampfderelemente.main.everything;
 
 public class CharacterPlayable extends ImageView {
     int health;
@@ -163,9 +163,10 @@ public class CharacterPlayable extends ImageView {
 
                     setLayoutY(y);
                 }
-
+                if (first_Attack_LastUsed + 100 < System.currentTimeMillis()){
+                    waterWhip.setLayoutX(-300);
+                }
                 if (timerCheckTime + 1000 < System.currentTimeMillis() && !matchEnded) {
-
                     // Reload attacks
                     if (first_Attack_LastUsed + first_Attack_Reload < System.currentTimeMillis() &&
                             first_AttackAmount < first_AttackMaxAmount) {

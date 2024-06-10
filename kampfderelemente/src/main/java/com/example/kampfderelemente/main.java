@@ -175,14 +175,18 @@ public class main extends Application {
 
     public static void newMatch() {
         PlayerOne = new CharacterPlayable(
-                100, 250, 500, 300, (int) (width / 10), groundY, 5, 250, false, 5,
+                100, 250, 500, 300, (int) (width / 10), groundY, 5,
+                250, false, 15,
                 2, 2, 1, 1
         );
         PlayerTwo = new CharacterPlayable(
-                100, 250, 500, 300, (int) (width / 10) * 7, groundY, 5, 250, true, 5,
+                100, 250, 500, 300, (int) (width / 10) * 7, groundY, 5,
+                250, true, 15,
                 2, 2, 1, 1
         );
 
+        PlayerOne.waterWhip.setLayoutX(-300);
+        PlayerTwo.waterWhip.setLayoutX(-300);
         PlayerOne.setImage(new Image("file:images/waterbender_normal.png"));
         PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
         PlayerOne.setLayoutX(PlayerOne.x);
@@ -233,7 +237,7 @@ public class main extends Application {
         for (KeyCode k : isPressed) {
             switch (k) {
                 case A:
-                    if (!PlayerOne.frozen && !matchEnded) {
+                    if (!PlayerOne.frozen && !(PlayerOne.x <= 0) && !matchEnded) {
                         PlayerOne.setLayoutX(PlayerOne.getLayoutX() - PlayerOne.speed);
                         PlayerOne.x = (int) PlayerOne.getLayoutX();
                         PlayerOne.direction = true;
@@ -282,7 +286,7 @@ public class main extends Application {
                     }
                     break;
                 case D:
-                    if (!PlayerOne.frozen && !matchEnded) {
+                    if (!PlayerOne.frozen && !(PlayerOne.x + PlayerOne.width >= width) && !matchEnded) {
                         PlayerOne.setLayoutX(PlayerOne.getLayoutX() + PlayerOne.speed);
                         PlayerOne.x = (int) PlayerOne.getLayoutX();
                         PlayerOne.direction = false;
@@ -328,7 +332,7 @@ public class main extends Application {
                     }
                     break;
                 case J:
-                    if (!PlayerTwo.frozen && !matchEnded) {
+                    if (!PlayerTwo.frozen && !(PlayerTwo.x <= 0) && !matchEnded) {
                         PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - PlayerTwo.speed);
                         PlayerTwo.x = (int) PlayerTwo.getLayoutX();
                         PlayerTwo.direction = true;
@@ -348,7 +352,7 @@ public class main extends Application {
                     }
                     break;
                 case L:
-                    if (!PlayerTwo.frozen && !matchEnded) {
+                    if (!PlayerTwo.frozen && !(PlayerTwo.x + PlayerTwo.width >= width) && !matchEnded) {
                         PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + PlayerTwo.speed);
                         PlayerTwo.x = (int) PlayerTwo.getLayoutX();
                         PlayerTwo.direction = false;
@@ -420,7 +424,7 @@ public class main extends Application {
                         }
                         PlayerOne.basic_Projektile_LastUsed = System.currentTimeMillis();
                         Projectile projectilePlayer1 = new Projectile(
-                                100, 100, PlayerOne.x, PlayerOne.y + PlayerOne.height / 4, 20, 5,
+                                80, 80, PlayerOne.x, PlayerOne.y + PlayerOne.height / 4, 20, 5,
                                 false, 1, PlayerOne.direction
                         );
                         projectilePlayer1.setImage(new Image("file:images/waterball.png"));
@@ -438,7 +442,7 @@ public class main extends Application {
                         }
                         PlayerTwo.basic_Projektile_LastUsed = System.currentTimeMillis();
                         Projectile projectilePlayer2 = new Projectile(
-                                100, 100, PlayerTwo.x, PlayerTwo.y + PlayerTwo.height / 4, 20, 5,
+                                80, 80, PlayerTwo.x, PlayerTwo.y + PlayerTwo.height / 4, 20, 5,
                                 false, 2, PlayerTwo.direction
                         );
                         projectilePlayer2.setImage(new Image("file:images/waterball.png"));
@@ -446,11 +450,16 @@ public class main extends Application {
                     }
                     break;
                 case P://todo: Da steht water-whip Player2
-                    if (PlayerTwo.second_AttackAmount > 0 && !matchEnded) {
+                    if (PlayerTwo.first_AttackAmount > 0 && !matchEnded) {
+                        System.out.println(PlayerTwo.first_AttackAmount);
                         if (PlayerTwo.direction) {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                            PlayerTwo.waterWhip.setLayoutX(PlayerTwo.x - PlayerTwo.width + 50);
+                            PlayerTwo.waterWhip.setLayoutY(PlayerTwo.y + PlayerTwo.height / 4);
                         } else {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch.png"));
+                            PlayerTwo.waterWhip.setLayoutX(PlayerTwo.x + PlayerTwo.width);
+                            PlayerTwo.waterWhip.setLayoutY(PlayerTwo.y + PlayerTwo.height / 4);
                         }
                         if ((PlayerTwo.direction
                                 && (PlayerOne.x + PlayerOne.width > PlayerTwo.x - PlayerTwo.first_Attack_Range
@@ -459,10 +468,10 @@ public class main extends Application {
                                 PlayerTwo.first_Attack_LastUsed + PlayerTwo.first_Attack_Cooldown)
                         ) {
                             PlayerOne.health = (PlayerOne.health -
-                                    ((PlayerTwo.damage + (PlayerTwo.x - (PlayerOne.x))) / 10)
+                                    ((PlayerTwo.damage + (PlayerTwo.x - (PlayerOne.x))) / 15)
                             );
                             System.out.println(" PlayerTwo.direction damage: " +
-                                    ((PlayerTwo.damage + (PlayerTwo.x - (PlayerOne.x))) / 10)
+                                    ((PlayerTwo.damage + (PlayerTwo.x - (PlayerOne.x))) / 15)
                             );
                             System.out.println(PlayerOne.health);
                             updateCharacterHealth();
@@ -474,10 +483,10 @@ public class main extends Application {
                                 PlayerTwo.first_Attack_LastUsed + PlayerTwo.first_Attack_Cooldown)
                         ) {
                             PlayerOne.health = (PlayerOne.health -
-                                    ((PlayerTwo.damage + (PlayerOne.x - PlayerTwo.x)) / 10)
+                                    ((PlayerTwo.damage + (PlayerOne.x - PlayerTwo.x)) / 15)
                             );
                             System.out.println("damage: " +
-                                    ((PlayerTwo.damage + (PlayerOne.x - PlayerTwo.x)) / 10)
+                                    ((PlayerTwo.damage + (PlayerOne.x - PlayerTwo.x)) / 15)
                             );
                             System.out.println(PlayerOne.health);
                             updateCharacterHealth();
@@ -556,11 +565,15 @@ public class main extends Application {
                     }
                     break;
                 case R://todo: Da steht water-whip Player1
-                    if (PlayerOne.second_AttackAmount > 0 && !matchEnded) {
+                    if (PlayerOne.first_AttackAmount > 0 && !matchEnded) {
                         if (PlayerOne.direction) {
                             PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
+                            PlayerOne.waterWhip.setLayoutX(PlayerOne.x - PlayerOne.width + 50);
+                            PlayerOne.waterWhip.setLayoutY(PlayerOne.y + PlayerOne.height / 4);
                         } else {
                             PlayerOne.setImage(new Image("file:images/waterbender_punch.png"));
+                            PlayerOne.waterWhip.setLayoutX(PlayerOne.x + PlayerOne.width);
+                            PlayerOne.waterWhip.setLayoutY(PlayerOne.y + PlayerOne.height / 4);
                         }
                         if ((PlayerOne.direction
                                 && (PlayerTwo.x + PlayerTwo.width > PlayerOne.x - PlayerOne.first_Attack_Range
@@ -570,10 +583,10 @@ public class main extends Application {
                                 PlayerOne.first_Attack_LastUsed + PlayerOne.first_Attack_Cooldown)
                         ) {
                             PlayerTwo.health = (PlayerTwo.health -
-                                    ((PlayerOne.damage + (PlayerOne.x - PlayerTwo.x)) / 10)
+                                    ((PlayerOne.damage + (PlayerOne.x - PlayerTwo.x)) / 15)
                             );
                             System.out.println("damage: " +
-                                    ((PlayerOne.damage + (PlayerOne.x - PlayerTwo.x)) / 10)
+                                    ((PlayerOne.damage + (PlayerOne.x - PlayerTwo.x)) / 15)
                             );
                             System.out.println(PlayerTwo.health);
                             updateCharacterHealth();
@@ -586,10 +599,10 @@ public class main extends Application {
                                 PlayerOne.first_Attack_LastUsed + PlayerOne.first_Attack_Cooldown)
                         ) {
                             PlayerTwo.health = (PlayerTwo.health -
-                                    ((PlayerOne.damage + (PlayerTwo.x - PlayerOne.x)) / 10)
+                                    ((PlayerOne.damage + (PlayerTwo.x - PlayerOne.x)) / 15)
                             );
                             System.out.println("damage: " +
-                                    ((PlayerOne.damage + (PlayerTwo.x - PlayerOne.x)) / 10)
+                                    ((PlayerOne.damage + (PlayerTwo.x - PlayerOne.x)) / 15)
                             );
                             System.out.println(PlayerTwo.health);
                             updateCharacterHealth();
@@ -705,6 +718,12 @@ public class main extends Application {
                     }
                     break;
             }
+        }
+        if (PlayerOne.first_Attack_LastUsed + 100 < System.currentTimeMillis()){
+            PlayerOne.waterWhip.setLayoutX(-300);
+        }
+        if (PlayerTwo.first_Attack_LastUsed + 100 < System.currentTimeMillis()){
+            PlayerTwo.waterWhip.setLayoutX(-300);
         }
     }
 

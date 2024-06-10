@@ -4,7 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.image.ImageView;
 
 import static com.example.kampfderelemente.main.*;
-import static com.example.kampfderelemente.main.matchEnded;
 
 public class Projectile extends ImageView {
     int height;
@@ -49,6 +48,8 @@ public class Projectile extends ImageView {
             public void handle(long l) {
                 //if (start + 50 < System.currentTimeMillis()) {
                 if (x > main.width || x < 0  && !matchEnded) {
+                    setLayoutX(-100);
+                    setLayoutY(-100);
                     stop();
                 }
 
@@ -85,6 +86,8 @@ public class Projectile extends ImageView {
                         }
                         updateCharacterHealth();
                         System.out.println("clear hit with my projectile-boi");
+                        setLayoutX(-100);
+                        setLayoutY(-100);
                         stop();
                     }
                 }
@@ -120,6 +123,8 @@ public class Projectile extends ImageView {
                         }
                         updateCharacterHealth();
                         System.out.println("clear hit with my projectile-boi");
+                        setLayoutX(-100);
+                        setLayoutY(-100);
                         stop();
                     }
                 }
@@ -152,6 +157,8 @@ public class Projectile extends ImageView {
                         }
                         updateCharacterHealth();
                         System.out.println("clear hit with my projectile-boi");
+                        setLayoutX(-100);
+                        setLayoutY(-100);
                         stop();
                     }
                 }
@@ -177,6 +184,9 @@ public class Projectile extends ImageView {
                         }
                         updateCharacterHealth();
                         System.out.println("clear hit with my projectile-boi");
+
+                        setLayoutX(-100);
+                        setLayoutY(-100);
                         stop();
                     }
                 }
