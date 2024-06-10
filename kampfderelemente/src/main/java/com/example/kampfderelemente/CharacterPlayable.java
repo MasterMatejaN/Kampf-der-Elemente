@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import static com.example.kampfderelemente.main.*;
+import static com.example.kampfderelemente.main.everything;
 
 public class CharacterPlayable extends ImageView {
     int health;
@@ -15,8 +16,7 @@ public class CharacterPlayable extends ImageView {
     int y;
     int damage;
     int range;
-    // todo: (only Akinci delete me) | notiz: direction "false" => rechts | "true" == links
-    boolean direction;
+    boolean direction; // "false" => right, "true" => left
     int speed;
     int speedUnchanged;
     int first_AttackAmount;
@@ -40,21 +40,15 @@ public class CharacterPlayable extends ImageView {
     int third_Attack_Reload = 10000;
     int fourth_Attack_Reload = 2000;
 
-
     int basic_Attack_Range_Left = 100;
     int basic_Attack_Range_Right = 100 + width;
-    int first_Attack_Range = 250;
+    int first_Attack_Range = 200;
 
-    boolean jumping = false;
-    int heightDuringJump;
-    int jump_MaxHeight;
-    long lastValidJump;
     boolean isSneaking = false;
     int ySneaking;
     int heightSneaking;
     int yStand;
     int heightStand;
-    //todo booleans nicht nötig, mit nur long geht auch
     boolean bleeding = false;
     boolean cooled = false;
     boolean frozen = false;
@@ -79,6 +73,12 @@ public class CharacterPlayable extends ImageView {
     int waterWhipHeight = 40;
     int waterWhipX;
     int waterWhipY = y + height / 2;
+    boolean isJumping = false;
+    double velocityY = 0;
+    final double GRAVITY = -150;
+    final double JUMP_STRENGTH = 75;
+    final double TIME_STEP = 0.016;
+    long jumpstart;
 
     public CharacterPlayable(int health, int width, int height, int heightSneaking, int x, int y, int damage,
                              int range, boolean direction, int speed, int first_AttackAmount,
@@ -87,6 +87,7 @@ public class CharacterPlayable extends ImageView {
         waterWhip.setFitHeight(waterWhipHeight);
         waterWhip.setFitWidth(first_Attack_Range);
         waterWhip.setLayoutY(waterWhipY);
+        waterWhip.setLayoutX(-300);
         this.health = health;
         this.width = width;
         this.height = height;
@@ -119,6 +120,7 @@ public class CharacterPlayable extends ImageView {
     public void timer() {
         AnimationTimer animationTimer = new AnimationTimer() {
             long time;
+
             @Override
             public void handle(long l) {
                 Button rematch = new Button("Rematch?");
@@ -136,8 +138,32 @@ public class CharacterPlayable extends ImageView {
                     System.out.println("P1 WINS");
                     everything.getChildren().add(rematch);
                 }
+                if (isJumping) {
+                    velocityY += GRAVITY * TIME_STEP;
+                    y -= velocityY * TIME_STEP;
+                    System.out.println(velocityY);
+                    System.out.println(y);
+                    if (y + height - 142 > (main.height  - main.height / 4)) {
+                        System.out.println("y = " + y);
+                        System.out.println("height = " + height);
+                        System.out.println("y + height = " + (y + height));
+                        System.out.println("groundY = " + groundY);
+                        System.out.println("(main.height  - main.height / 4) = " + (main.height - main.height / 4));
+                        y = (int) (main.height  - main.height / 4);
+                        velocityY = 0;
+                        isJumping = false;
+                        y = yStand;
+                        setImage(new Image("file:images/waterbender_normal.png"));
+                        setLayoutY(y);
+                        System.out.println("jumping stipped");
+                    }
+
+                    setLayoutY(y);
+                }
+
                 if (timerCheckTime + 1000 < System.currentTimeMillis()) {
-                    //reload attacks
+
+                    // Reload attacks
                     if (first_Attack_LastUsed + first_Attack_Reload < System.currentTimeMillis() &&
                             first_AttackAmount < first_AttackMaxAmount) {
                         first_AttackAmount++;
@@ -155,7 +181,7 @@ public class CharacterPlayable extends ImageView {
                         fourth_AttackAmount++;
                     }
 
-                    //bleeding status effect
+                    // Bleeding status effect
                     if (bleeding && bleedingStart + bleedingDuration > System.currentTimeMillis()) {
                         health -= (damage / 5) * 2;
                         updateCharacterHealth();
@@ -164,15 +190,17 @@ public class CharacterPlayable extends ImageView {
                     if (bleedingStart + bleedingDuration < System.currentTimeMillis()) {
                         bleedingStart = 0;
                         bleeding = false;
-                        //System.out.println("no Bleeding");
                     }
+
+                    // Enhanced mode
                     if (enhancedModeActive) {
                         speed *= 1.5;
                     }
-                    if (System.currentTimeMillis() > fourth_Attack_LastUsed + enhancedModeDuration){
+                    if (System.currentTimeMillis() > fourth_Attack_LastUsed + enhancedModeDuration) {
                         enhancedModeActive = false;
                         speed = speedUnchanged;
                     }
+
                     timerCheckTime += 1000;
                 }
             }
@@ -190,17 +218,5 @@ public class CharacterPlayable extends ImageView {
             }
         };
         animationTimer.start();
-    }
-
-    public void jump() {//todo delete this
-        jumping = true;
-        long jumpstart = System.currentTimeMillis();
-/*        while (jumpstart + 20 > System.currentTimeMillis()) {
-            y -= 1;
-            this.setLayoutY(y - height);
-        }
-        while(y < YGround){
-            y+=5;
-        }/**/
     }
 }
