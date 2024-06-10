@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import static com.example.kampfderelemente.main.*;
-import static com.example.kampfderelemente.main.everything;
+import static com.example.kampfderelemente.main.matchEnded;
 
 public class CharacterPlayable extends ImageView {
     int health;
@@ -127,18 +127,21 @@ public class CharacterPlayable extends ImageView {
                 rematch.setLayoutX(screenBounds.getWidth() /2);
                 rematch.setLayoutY(screenBounds.getHeight()/2);
                 rematch.setOnMousePressed((r) -> {
+                    matchEnded = false;
                     System.out.println(everything.getChildren());
                     everything.getChildren().remove(everything.getChildren().size()-1);
                     newMatch();
                 });
                 if(PlayerOne.health <= 0) {
                     System.out.println("P2 WINS");
+                    matchEnded = true;
                     everything.getChildren().add(rematch);
                 } else if (PlayerTwo.health <= 0){
                     System.out.println("P1 WINS");
+                    matchEnded = true;
                     everything.getChildren().add(rematch);
                 }
-                if (isJumping) {
+                if (isJumping && !matchEnded) {
                     velocityY += GRAVITY * TIME_STEP;
                     y -= velocityY * TIME_STEP;
                     System.out.println(velocityY);
@@ -161,7 +164,7 @@ public class CharacterPlayable extends ImageView {
                     setLayoutY(y);
                 }
 
-                if (timerCheckTime + 1000 < System.currentTimeMillis()) {
+                if (timerCheckTime + 1000 < System.currentTimeMillis() && !matchEnded) {
 
                     // Reload attacks
                     if (first_Attack_LastUsed + first_Attack_Reload < System.currentTimeMillis() &&

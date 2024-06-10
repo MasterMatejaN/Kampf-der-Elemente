@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.image.ImageView;
 
 import static com.example.kampfderelemente.main.*;
+import static com.example.kampfderelemente.main.matchEnded;
 
 public class Projectile extends ImageView {
     int height;
@@ -47,12 +48,12 @@ public class Projectile extends ImageView {
             @Override
             public void handle(long l) {
                 //if (start + 50 < System.currentTimeMillis()) {
-                if (x > main.width || x < 0) {
+                if (x > main.width || x < 0  && !matchEnded) {
                     stop();
                 }
 
                 if (belongsToPlayer == 1 &&
-                        !direction
+                        !direction  && !matchEnded
                 ) {
                     x += speed;
                     setLayoutX(x);
@@ -88,7 +89,7 @@ public class Projectile extends ImageView {
                     }
                 }
                 if (belongsToPlayer == 1 &&
-                        direction) {
+                        direction  && !matchEnded) {
                     x -= speed;
                     setLayoutX(x);
                     if ((
@@ -124,7 +125,7 @@ public class Projectile extends ImageView {
                 }
 
                 if (belongsToPlayer == 2 &&
-                        !direction
+                        !direction  && !matchEnded
                 ) {
                     x += speed;
                     setLayoutX(x);
@@ -155,7 +156,7 @@ public class Projectile extends ImageView {
                     }
                 }
                 if (belongsToPlayer == 2 &&
-                        direction) {
+                        direction  && !matchEnded) {
                     x -= speed;
                     setLayoutX(x);
                     if ((

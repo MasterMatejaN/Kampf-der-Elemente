@@ -6,7 +6,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
 import static com.example.kampfderelemente.main.*;
-import static com.example.kampfderelemente.main.isPressed;
 
 public class FrostPillar extends ImageView {
     int x;
@@ -75,7 +74,7 @@ public class FrostPillar extends ImageView {
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                if (timerCheckTime + FrameDurationArray[0] < System.currentTimeMillis()) {
+                if (timerCheckTime + FrameDurationArray[0] < System.currentTimeMillis() && !matchEnded) {
                     System.out.println(System.currentTimeMillis() - timerCheckTime + FrameDurationArray[0]);
                     if (endFrost < System.currentTimeMillis() && !frostEnd) {
                         System.out.println("frozen end");

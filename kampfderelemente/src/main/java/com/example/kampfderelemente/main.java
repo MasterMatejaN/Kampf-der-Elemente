@@ -53,7 +53,7 @@ public class main extends Application {
     );
 
     private long lastinputPlayerOne = 0;
-    private boolean PlayerOneStand = false;
+    public static boolean matchEnded = false;
 
     public static Set<KeyCode> isPressed = new HashSet<>();
     public static boolean go = false;
@@ -92,49 +92,49 @@ public class main extends Application {
             boolean containedD = false;
             boolean containedJ = false;
             boolean containedL = false;
-            if (isPressed.contains(KeyCode.S)) {
+            if (isPressed.contains(KeyCode.S) && !matchEnded) {
                 containedS = true;
             }
-            if (isPressed.contains(KeyCode.K)) {
+            if (isPressed.contains(KeyCode.K) && !matchEnded) {
                 containedK = true;
             }
-            if (isPressed.contains(KeyCode.A)) {
+            if (isPressed.contains(KeyCode.A) && !matchEnded) {
                 containedA = true;
             }
-            if (isPressed.contains(KeyCode.D)) {
+            if (isPressed.contains(KeyCode.D) && !matchEnded) {
                 containedD = true;
             }
-            if (isPressed.contains(KeyCode.J)) {
+            if (isPressed.contains(KeyCode.J) && !matchEnded) {
                 containedJ = true;
             }
-            if (isPressed.contains(KeyCode.L)) {
+            if (isPressed.contains(KeyCode.L) && !matchEnded) {
                 containedL = true;
             }
             isPressed.remove(e.getCode());
-            if (!isPressed.contains(KeyCode.S) && containedS && !PlayerOne.frozen) {
+            if (!isPressed.contains(KeyCode.S) && containedS && !PlayerOne.frozen && !matchEnded) {
                 PlayerOne.isSneaking = false;
                 PlayerOne.y = PlayerOne.yStand;
                 PlayerOne.setLayoutY(PlayerOne.y);
                 PlayerOne.height = PlayerOne.heightStand;
                 PlayerOne.setFitHeight(PlayerOne.height);
             }
-            if (!isPressed.contains(KeyCode.K) && containedK && !PlayerTwo.frozen) {
+            if (!isPressed.contains(KeyCode.K) && containedK && !PlayerTwo.frozen && !matchEnded) {
                 PlayerTwo.isSneaking = false;
                 PlayerTwo.y = PlayerTwo.yStand;
                 PlayerTwo.setLayoutY(PlayerTwo.y);
                 PlayerTwo.height = PlayerTwo.heightStand;
                 PlayerTwo.setFitHeight(PlayerTwo.height);
             }
-            if (!isPressed.contains(KeyCode.A) && containedA) {
+            if (!isPressed.contains(KeyCode.A) && containedA && !matchEnded) {
                 a = 0;
             }
-            if (!isPressed.contains(KeyCode.D) && containedD) {
+            if (!isPressed.contains(KeyCode.D) && containedD && !matchEnded) {
                 b = 0;
             }
-            if (!isPressed.contains(KeyCode.J) && containedJ) {
+            if (!isPressed.contains(KeyCode.J) && containedJ && !matchEnded) {
                 c = 0;
             }
-            if (!isPressed.contains(KeyCode.L) && containedL) {
+            if (!isPressed.contains(KeyCode.L) && containedL && !matchEnded) {
                 d = 0;
             }
             System.out.println(isPressed);
@@ -233,7 +233,7 @@ public class main extends Application {
         for (KeyCode k : isPressed) {
             switch (k) {
                 case A:
-                    if (!PlayerOne.frozen) {
+                    if (!PlayerOne.frozen && !matchEnded) {
                         PlayerOne.setLayoutX(PlayerOne.getLayoutX() - PlayerOne.speed);
                         PlayerOne.x = (int) PlayerOne.getLayoutX();
                         PlayerOne.direction = true;
@@ -255,7 +255,7 @@ public class main extends Application {
                     }
                     break;
                 case W:
-                    if (!PlayerOne.frozen && !PlayerOne.isSneaking) {
+                    if (!PlayerOne.frozen && !PlayerOne.isSneaking && !matchEnded) {
                         lastinputPlayerOne = System.nanoTime();
                         if (PlayerOne.y == groundY) {
                             if (PlayerOne.direction) {
@@ -272,7 +272,7 @@ public class main extends Application {
                     }
                     break;
                 case S:
-                    if (!PlayerOne.frozen && !PlayerOne.isJumping) {
+                    if (!PlayerOne.frozen && !PlayerOne.isJumping && !matchEnded) {
                         lastinputPlayerOne = System.nanoTime();
                         PlayerOne.isSneaking = true;
                         PlayerOne.y = PlayerOne.ySneaking;
@@ -282,7 +282,7 @@ public class main extends Application {
                     }
                     break;
                 case D:
-                    if (!PlayerOne.frozen) {
+                    if (!PlayerOne.frozen && !matchEnded) {
                         PlayerOne.setLayoutX(PlayerOne.getLayoutX() + PlayerOne.speed);
                         PlayerOne.x = (int) PlayerOne.getLayoutX();
                         PlayerOne.direction = false;
@@ -303,7 +303,7 @@ public class main extends Application {
                     }
                     break;
                 case I:
-                    if (!PlayerTwo.frozen && !PlayerTwo.isSneaking) {
+                    if (!PlayerTwo.frozen && !PlayerTwo.isSneaking && !matchEnded) {
                         if (PlayerTwo.y == groundY) {
                             if (PlayerTwo.direction) {
                                 PlayerTwo.setImage(new Image("file:images/waterbender_jump_reversed.png"));
@@ -319,7 +319,7 @@ public class main extends Application {
                     }
                     break;
                 case K:
-                    if (!PlayerTwo.frozen && !PlayerTwo.isJumping) {
+                    if (!PlayerTwo.frozen && !PlayerTwo.isJumping && !matchEnded) {
                         PlayerTwo.isSneaking = true;
                         PlayerTwo.y = PlayerTwo.ySneaking;
                         PlayerTwo.setLayoutY(PlayerTwo.y);
@@ -328,7 +328,7 @@ public class main extends Application {
                     }
                     break;
                 case J:
-                    if (!PlayerTwo.frozen) {
+                    if (!PlayerTwo.frozen && !matchEnded) {
                         PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() - PlayerTwo.speed);
                         PlayerTwo.x = (int) PlayerTwo.getLayoutX();
                         PlayerTwo.direction = true;
@@ -348,7 +348,7 @@ public class main extends Application {
                     }
                     break;
                 case L:
-                    if (!PlayerTwo.frozen) {
+                    if (!PlayerTwo.frozen && !matchEnded) {
                         PlayerTwo.setLayoutX(PlayerTwo.getLayoutX() + PlayerTwo.speed);
                         PlayerTwo.x = (int) PlayerTwo.getLayoutX();
                         PlayerTwo.direction = false;
@@ -373,6 +373,7 @@ public class main extends Application {
                             && PlayerTwo.x < PlayerOne.x)
                     ) || ((!PlayerOne.direction) && (PlayerTwo.x < PlayerOne.x + PlayerOne.basic_Attack_Range_Right
                             && PlayerTwo.x > PlayerOne.x)))
+                            && !matchEnded
                             && (System.currentTimeMillis() >
                             PlayerOne.basic_Attack_LastUsed + PlayerOne.basic_Attack_Cooldown)
                     ) {
@@ -393,10 +394,11 @@ public class main extends Application {
                             && PlayerOne.x < PlayerTwo.x)
                     ) || ((!PlayerTwo.direction) && (PlayerOne.x < PlayerTwo.x + PlayerTwo.basic_Attack_Range_Right
                             && PlayerOne.x > PlayerTwo.x)))
+                            && !matchEnded
                             && (System.currentTimeMillis() >
                             PlayerTwo.basic_Attack_LastUsed + PlayerTwo.basic_Attack_Cooldown)
                     ) {
-                        if (PlayerTwo.direction) {
+                        if (PlayerTwo.direction && !matchEnded) {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch.png"));
@@ -409,7 +411,7 @@ public class main extends Application {
                     break;
                 case E://todo: Da steht Basic Projectile Player1
                     if (System.currentTimeMillis() >
-                            PlayerOne.basic_Projektile_LastUsed + PlayerOne.basic_Projektile_Cooldown
+                            PlayerOne.basic_Projektile_LastUsed + PlayerOne.basic_Projektile_Cooldown && !matchEnded
                     ) {
                         if (PlayerOne.direction) {
                             PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
@@ -427,7 +429,7 @@ public class main extends Application {
                     break;
                 case O://todo: Da steht Basic Projectile Player2
                     if (System.currentTimeMillis() >
-                            PlayerTwo.basic_Projektile_LastUsed + PlayerTwo.basic_Projektile_Cooldown
+                            PlayerTwo.basic_Projektile_LastUsed + PlayerTwo.basic_Projektile_Cooldown && !matchEnded
                     ) {
                         if (PlayerTwo.direction) {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
@@ -444,7 +446,7 @@ public class main extends Application {
                     }
                     break;
                 case P://todo: Da steht water-whip Player2
-                    if (PlayerTwo.second_AttackAmount > 0) {
+                    if (PlayerTwo.second_AttackAmount > 0 && !matchEnded) {
                         if (PlayerTwo.direction) {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
@@ -485,7 +487,7 @@ public class main extends Application {
                     }
                     break;
                 case H://todo: Da steht ice-spike Player2
-                    if (PlayerTwo.second_AttackAmount > 0) {
+                    if (PlayerTwo.second_AttackAmount > 0 && !matchEnded) {
                         if (PlayerTwo.direction) {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
@@ -514,7 +516,7 @@ public class main extends Application {
                     }
                     break;
                 case N://todo: Da steht frost-pillar Player2
-                    if (PlayerTwo.third_AttackAmount > 0) {
+                    if (PlayerTwo.third_AttackAmount > 0 && !matchEnded) {
                         if (PlayerTwo.direction) {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
@@ -533,7 +535,7 @@ public class main extends Application {
                     }
                     break;
                 case M://todo: Da steht enhanced-movement Player2
-                    if (PlayerTwo.fourth_AttackAmount > 0) {
+                    if (PlayerTwo.fourth_AttackAmount > 0 && !matchEnded) {
                         if (PlayerTwo.direction) {
                             PlayerTwo.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
@@ -554,7 +556,7 @@ public class main extends Application {
                     }
                     break;
                 case R://todo: Da steht water-whip Player1
-                    if (PlayerOne.second_AttackAmount > 0) {
+                    if (PlayerOne.second_AttackAmount > 0 && !matchEnded) {
                         if (PlayerOne.direction) {
                             PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
@@ -597,7 +599,7 @@ public class main extends Application {
                     }
                     break;
                 case X://todo: Da steht ice-spike Player1
-                    if (PlayerOne.second_AttackAmount > 0) {
+                    if (PlayerOne.second_AttackAmount > 0 && !matchEnded) {
                         if (PlayerOne.direction) {
                             PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
@@ -626,7 +628,7 @@ public class main extends Application {
                     }
                     break;
                 case C://todo: Da steht frost-pillar Player1
-                    if (PlayerOne.third_AttackAmount > 0) {
+                    if (PlayerOne.third_AttackAmount > 0 && !matchEnded) {
                         if (PlayerOne.direction) {
                             PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
@@ -645,7 +647,7 @@ public class main extends Application {
                     }
                     break;
                 case F://todo: Da steht enhanced-movement Player1
-                    if (PlayerOne.fourth_AttackAmount > 0) {
+                    if (PlayerOne.fourth_AttackAmount > 0 && !matchEnded) {
                         if (PlayerOne.direction) {
                             PlayerOne.setImage(new Image("file:images/waterbender_punch_reversed.png"));
                         } else {
@@ -666,7 +668,7 @@ public class main extends Application {
                     }
                     break;
                 default:
-                    if (PlayerOne.direction) {
+                    if (PlayerOne.direction && !matchEnded) {
                         if (go) {
                             PlayerOne.setImage(new Image("file:images/waterbender_normal_reversed.png"));
                             go = false;
@@ -684,7 +686,7 @@ public class main extends Application {
                         }
                     }
 
-                    if (PlayerTwo.direction) {
+                    if (PlayerTwo.direction && !matchEnded) {
                         if (go1) {
                             PlayerTwo.setImage(new Image("file:images/waterbender_normal_reversed.png"));
                             go1 = false;
